@@ -75,7 +75,7 @@ Hardware
 ---
 
 <p align="center">
-<img src="diagrams/FirmwareArchitecture.svg" width="900">
+<img src="diagrams/FirmwareArchitecture.svg" width="500">
 </p>
 
 ---
