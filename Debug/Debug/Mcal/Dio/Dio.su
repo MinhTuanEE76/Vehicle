@@ -1,0 +1,5 @@
+E:/USER/AUTOSAR/Mcal/Dio/Dio.c:21:15:Dio_ReadChannel	24	static
+E:/USER/AUTOSAR/Mcal/Dio/Dio.c:34:6:Dio_WriteChannel	24	static
+E:/USER/AUTOSAR/Mcal/Dio/Dio.c:53:19:Dio_ReadPort	16	static
+E:/USER/AUTOSAR/Mcal/Dio/Dio.c:63:6:Dio_WritePort	16	static
+E:/USER/AUTOSAR/Mcal/Dio/Dio.c:73:15:Dio_FlipChannel	24	static

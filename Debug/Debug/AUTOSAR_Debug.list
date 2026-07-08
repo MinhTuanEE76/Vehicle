@@ -1,0 +1,2981 @@
+
+AUTOSAR_Debug.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000188  08000000  08000000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         000011ac  08000188  08000188  00001188  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000130  08001334  08001334  00002334  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  08001464  08001464  0000302c  2**0
+                  CONTENTS
+  4 .ARM          00000000  08001464  08001464  0000302c  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  08001464  08001464  0000302c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  08001464  08001464  00002464  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  08001468  08001468  00002468  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         0000002c  20000000  0800146c  00003000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .ccmram       00000000  10000000  10000000  0000302c  2**0
+                  CONTENTS
+ 10 .bss          00000038  2000002c  2000002c  0000302c  2**2
+                  ALLOC
+ 11 ._user_heap_stack 00000604  20000064  20000064  0000302c  2**0
+                  ALLOC
+ 12 .ARM.attributes 00000030  00000000  00000000  0000302c  2**0
+                  CONTENTS, READONLY
+ 13 .debug_info   000027de  00000000  00000000  0000305c  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_abbrev 00000b71  00000000  00000000  0000583a  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_aranges 00000278  00000000  00000000  000063b0  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_rnglists 00000190  00000000  00000000  00006628  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_macro  00004441  00000000  00000000  000067b8  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_line   00001a71  00000000  00000000  0000abf9  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .debug_str    0000fa90  00000000  00000000  0000c66a  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 20 .comment      00000043  00000000  00000000  0001c0fa  2**0
+                  CONTENTS, READONLY
+ 21 .debug_frame  00000754  00000000  00000000  0001c140  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 22 .debug_line_str 0000003f  00000000  00000000  0001c894  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+08000188 <__do_global_dtors_aux>:
+ 8000188:	b510      	push	{r4, lr}
+ 800018a:	4c05      	ldr	r4, [pc, #20]	@ (80001a0 <__do_global_dtors_aux+0x18>)
+ 800018c:	7823      	ldrb	r3, [r4, #0]
+ 800018e:	b933      	cbnz	r3, 800019e <__do_global_dtors_aux+0x16>
+ 8000190:	4b04      	ldr	r3, [pc, #16]	@ (80001a4 <__do_global_dtors_aux+0x1c>)
+ 8000192:	b113      	cbz	r3, 800019a <__do_global_dtors_aux+0x12>
+ 8000194:	4804      	ldr	r0, [pc, #16]	@ (80001a8 <__do_global_dtors_aux+0x20>)
+ 8000196:	f3af 8000 	nop.w
+ 800019a:	2301      	movs	r3, #1
+ 800019c:	7023      	strb	r3, [r4, #0]
+ 800019e:	bd10      	pop	{r4, pc}
+ 80001a0:	2000002c 	.word	0x2000002c
+ 80001a4:	00000000 	.word	0x00000000
+ 80001a8:	0800131c 	.word	0x0800131c
+
+080001ac <frame_dummy>:
+ 80001ac:	b508      	push	{r3, lr}
+ 80001ae:	4b03      	ldr	r3, [pc, #12]	@ (80001bc <frame_dummy+0x10>)
+ 80001b0:	b11b      	cbz	r3, 80001ba <frame_dummy+0xe>
+ 80001b2:	4903      	ldr	r1, [pc, #12]	@ (80001c0 <frame_dummy+0x14>)
+ 80001b4:	4803      	ldr	r0, [pc, #12]	@ (80001c4 <frame_dummy+0x18>)
+ 80001b6:	f3af 8000 	nop.w
+ 80001ba:	bd08      	pop	{r3, pc}
+ 80001bc:	00000000 	.word	0x00000000
+ 80001c0:	20000030 	.word	0x20000030
+ 80001c4:	0800131c 	.word	0x0800131c
+
+080001c8 <main>:
+#include "Can.h"
+#include "stm32f407xxx_systick.h"
+
+
+int main(void)
+{
+ 80001c8:	b580      	push	{r7, lr}
+ 80001ca:	af00      	add	r7, sp, #0
+    /* Initialize the MCU */
+    Mcu_Init(&Mcu_ConfigTable);
+ 80001cc:	480c      	ldr	r0, [pc, #48]	@ (8000200 <main+0x38>)
+ 80001ce:	f000 fba7 	bl	8000920 <Mcu_Init>
+    Mcu_InitClock(MCU_CLOCK_168MHZ); /* Select clock setting 0 from the configuration table */
+ 80001d2:	2000      	movs	r0, #0
+ 80001d4:	f000 fbbc 	bl	8000950 <Mcu_InitClock>
+    Mcu_DistributePllClock();
+ 80001d8:	f000 fc28 	bl	8000a2c <Mcu_DistributePllClock>
+    /* Initialize the Port driver with the configuration structure */
+    Port_Init(&Port_ConfigTable);
+ 80001dc:	4809      	ldr	r0, [pc, #36]	@ (8000204 <main+0x3c>)
+ 80001de:	f000 ff69 	bl	80010b4 <Port_Init>
+    /* Initialize the SysTick timer */
+    SYSTICK_Init(); /* Assuming a 16 MHz clock, this will generate a 1 ms tick */
+ 80001e2:	f001 f819 	bl	8001218 <SYSTICK_Init>
+
+    Can_Init(Can_ConfigSets);
+ 80001e6:	4808      	ldr	r0, [pc, #32]	@ (8000208 <main+0x40>)
+ 80001e8:	f000 f978 	bl	80004dc <Can_Init>
+    while(1)
+    {
+        Dio_FlipChannel(DIO_CHANNEL_ID(DIO_PORT_A,DIO_CHANNEL_7));
+ 80001ec:	2007      	movs	r0, #7
+ 80001ee:	f000 fa51 	bl	8000694 <Dio_FlipChannel>
+
+        SYSTICK_DelayMs(500);      /* Delay 500ms */
+ 80001f2:	f44f 70fa 	mov.w	r0, #500	@ 0x1f4
+ 80001f6:	f001 f837 	bl	8001268 <SYSTICK_DelayMs>
+        Dio_FlipChannel(DIO_CHANNEL_ID(DIO_PORT_A,DIO_CHANNEL_7));
+ 80001fa:	bf00      	nop
+ 80001fc:	e7f6      	b.n	80001ec <main+0x24>
+ 80001fe:	bf00      	nop
+ 8000200:	08001414 	.word	0x08001414
+ 8000204:	0800145c 	.word	0x0800145c
+ 8000208:	08001364 	.word	0x08001364
+
+0800020c <Can_lInitController>:
+/**
+ * @brief Function initial Can controller which will be used
+ * @param none use global ConfigPtr pointer that contain configuration infor
+ */
+static void Can_lInitController(void)
+{
+ 800020c:	b580      	push	{r7, lr}
+ 800020e:	b082      	sub	sp, #8
+ 8000210:	af00      	add	r7, sp, #0
+    for (uint8 i = 0; i < ConfigPtr->NumControllers; i++)
+ 8000212:	2300      	movs	r3, #0
+ 8000214:	71fb      	strb	r3, [r7, #7]
+ 8000216:	e013      	b.n	8000240 <Can_lInitController+0x34>
+    {
+        const Can_ControllerConfigType *ControllerCfg = &ConfigPtr->ControllerConfigs[i];
+ 8000218:	4b0f      	ldr	r3, [pc, #60]	@ (8000258 <Can_lInitController+0x4c>)
+ 800021a:	681b      	ldr	r3, [r3, #0]
+ 800021c:	6819      	ldr	r1, [r3, #0]
+ 800021e:	79fa      	ldrb	r2, [r7, #7]
+ 8000220:	4613      	mov	r3, r2
+ 8000222:	005b      	lsls	r3, r3, #1
+ 8000224:	4413      	add	r3, r2
+ 8000226:	009b      	lsls	r3, r3, #2
+ 8000228:	440b      	add	r3, r1
+ 800022a:	603b      	str	r3, [r7, #0]
+        // set controller state
+        Can_ControllerState[i] = CAN_CS_STOPPED;
+ 800022c:	79fb      	ldrb	r3, [r7, #7]
+ 800022e:	4a0b      	ldr	r2, [pc, #44]	@ (800025c <Can_lInitController+0x50>)
+ 8000230:	2102      	movs	r1, #2
+ 8000232:	54d1      	strb	r1, [r2, r3]
+        Can_Hw_InitControlller(ControllerCfg);
+ 8000234:	6838      	ldr	r0, [r7, #0]
+ 8000236:	f000 f837 	bl	80002a8 <Can_Hw_InitControlller>
+    for (uint8 i = 0; i < ConfigPtr->NumControllers; i++)
+ 800023a:	79fb      	ldrb	r3, [r7, #7]
+ 800023c:	3301      	adds	r3, #1
+ 800023e:	71fb      	strb	r3, [r7, #7]
+ 8000240:	4b05      	ldr	r3, [pc, #20]	@ (8000258 <Can_lInitController+0x4c>)
+ 8000242:	681b      	ldr	r3, [r3, #0]
+ 8000244:	791b      	ldrb	r3, [r3, #4]
+ 8000246:	79fa      	ldrb	r2, [r7, #7]
+ 8000248:	429a      	cmp	r2, r3
+ 800024a:	d3e5      	bcc.n	8000218 <Can_lInitController+0xc>
+    }
+}
+ 800024c:	bf00      	nop
+ 800024e:	bf00      	nop
+ 8000250:	3708      	adds	r7, #8
+ 8000252:	46bd      	mov	sp, r7
+ 8000254:	bd80      	pop	{r7, pc}
+ 8000256:	bf00      	nop
+ 8000258:	20000048 	.word	0x20000048
+ 800025c:	20000050 	.word	0x20000050
+
+08000260 <Can_lInitHardwareObject>:
+/**
+ * @brief Function initial Hardware Object
+ * use pointer ConfigPtr to confgire
+ */
+static void Can_lInitHardwareObject(void)
+{
+ 8000260:	b580      	push	{r7, lr}
+ 8000262:	b082      	sub	sp, #8
+ 8000264:	af00      	add	r7, sp, #0
+    for(uint8 i = 0 ; i < ConfigPtr->NumHohs ; i++)
+ 8000266:	2300      	movs	r3, #0
+ 8000268:	71fb      	strb	r3, [r7, #7]
+ 800026a:	e00f      	b.n	800028c <Can_lInitHardwareObject+0x2c>
+    {
+        const Can_HardwareObjectConfigType* HwObjectCfg = &ConfigPtr->HohConfigs[i];
+ 800026c:	4b0d      	ldr	r3, [pc, #52]	@ (80002a4 <Can_lInitHardwareObject+0x44>)
+ 800026e:	681b      	ldr	r3, [r3, #0]
+ 8000270:	6899      	ldr	r1, [r3, #8]
+ 8000272:	79fa      	ldrb	r2, [r7, #7]
+ 8000274:	4613      	mov	r3, r2
+ 8000276:	005b      	lsls	r3, r3, #1
+ 8000278:	4413      	add	r3, r2
+ 800027a:	009b      	lsls	r3, r3, #2
+ 800027c:	440b      	add	r3, r1
+ 800027e:	603b      	str	r3, [r7, #0]
+        Can_Hw_InitHwObject(HwObjectCfg);
+ 8000280:	6838      	ldr	r0, [r7, #0]
+ 8000282:	f000 f847 	bl	8000314 <Can_Hw_InitHwObject>
+    for(uint8 i = 0 ; i < ConfigPtr->NumHohs ; i++)
+ 8000286:	79fb      	ldrb	r3, [r7, #7]
+ 8000288:	3301      	adds	r3, #1
+ 800028a:	71fb      	strb	r3, [r7, #7]
+ 800028c:	79fb      	ldrb	r3, [r7, #7]
+ 800028e:	b29a      	uxth	r2, r3
+ 8000290:	4b04      	ldr	r3, [pc, #16]	@ (80002a4 <Can_lInitHardwareObject+0x44>)
+ 8000292:	681b      	ldr	r3, [r3, #0]
+ 8000294:	899b      	ldrh	r3, [r3, #12]
+ 8000296:	429a      	cmp	r2, r3
+ 8000298:	d3e8      	bcc.n	800026c <Can_lInitHardwareObject+0xc>
+    }
+}
+ 800029a:	bf00      	nop
+ 800029c:	bf00      	nop
+ 800029e:	3708      	adds	r7, #8
+ 80002a0:	46bd      	mov	sp, r7
+ 80002a2:	bd80      	pop	{r7, pc}
+ 80002a4:	20000048 	.word	0x20000048
+
+080002a8 <Can_Hw_InitControlller>:
+
+/**/
+static void Can_Hw_InitControlller(const Can_ControllerConfigType *ControllerCfg)
+{
+ 80002a8:	b580      	push	{r7, lr}
+ 80002aa:	b084      	sub	sp, #16
+ 80002ac:	af00      	add	r7, sp, #0
+ 80002ae:	6078      	str	r0, [r7, #4]
+    CAN_Reg_TypeDef_t *Instance = Can_ControllerInstance[ControllerCfg->ControllerId];
+ 80002b0:	687b      	ldr	r3, [r7, #4]
+ 80002b2:	781b      	ldrb	r3, [r3, #0]
+ 80002b4:	461a      	mov	r2, r3
+ 80002b6:	4b16      	ldr	r3, [pc, #88]	@ (8000310 <Can_Hw_InitControlller+0x68>)
+ 80002b8:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 80002bc:	60fb      	str	r3, [r7, #12]
+    /*Manipulate register to convert to CAN_CS_STOP */
+    Instance->MCR |= CAN_MCR_INRQ;
+ 80002be:	68fb      	ldr	r3, [r7, #12]
+ 80002c0:	681b      	ldr	r3, [r3, #0]
+ 80002c2:	f043 0201 	orr.w	r2, r3, #1
+ 80002c6:	68fb      	ldr	r3, [r7, #12]
+ 80002c8:	601a      	str	r2, [r3, #0]
+    while (!(Instance->MSR & CAN_MSR_INAK))
+ 80002ca:	bf00      	nop
+ 80002cc:	68fb      	ldr	r3, [r7, #12]
+ 80002ce:	685b      	ldr	r3, [r3, #4]
+ 80002d0:	f003 0301 	and.w	r3, r3, #1
+ 80002d4:	2b00      	cmp	r3, #0
+ 80002d6:	d0f9      	beq.n	80002cc <Can_Hw_InitControlller+0x24>
+        // wait to InitRequest ACK
+        /*future: add timeout */
+    }
+
+    /*Note: to configure controller, state is must be STOP*/
+    Can_SetBaudrate(ControllerCfg->ControllerId, ControllerCfg->BaudrateConfig->BaudrateConfigID);
+ 80002d8:	687b      	ldr	r3, [r7, #4]
+ 80002da:	781a      	ldrb	r2, [r3, #0]
+ 80002dc:	687b      	ldr	r3, [r7, #4]
+ 80002de:	685b      	ldr	r3, [r3, #4]
+ 80002e0:	881b      	ldrh	r3, [r3, #0]
+ 80002e2:	4619      	mov	r1, r3
+ 80002e4:	4610      	mov	r0, r2
+ 80002e6:	f000 f919 	bl	800051c <Can_SetBaudrate>
+    Instance->MCR &= ~CAN_MCR_INRQ;
+ 80002ea:	68fb      	ldr	r3, [r7, #12]
+ 80002ec:	681b      	ldr	r3, [r3, #0]
+ 80002ee:	f023 0201 	bic.w	r2, r3, #1
+ 80002f2:	68fb      	ldr	r3, [r7, #12]
+ 80002f4:	601a      	str	r2, [r3, #0]
+    while (Instance->MSR & CAN_MSR_INAK)
+ 80002f6:	bf00      	nop
+ 80002f8:	68fb      	ldr	r3, [r7, #12]
+ 80002fa:	685b      	ldr	r3, [r3, #4]
+ 80002fc:	f003 0301 	and.w	r3, r3, #1
+ 8000300:	2b00      	cmp	r3, #0
+ 8000302:	d1f9      	bne.n	80002f8 <Can_Hw_InitControlller+0x50>
+    {
+       /*wait to  CAN_MCR_INRQ = 0*/
+    }
+    
+}
+ 8000304:	bf00      	nop
+ 8000306:	bf00      	nop
+ 8000308:	3710      	adds	r7, #16
+ 800030a:	46bd      	mov	sp, r7
+ 800030c:	bd80      	pop	{r7, pc}
+ 800030e:	bf00      	nop
+ 8000310:	20000004 	.word	0x20000004
+
+08000314 <Can_Hw_InitHwObject>:
+
+/**
+ * @brief Configure Hardware Object correspond with Object type(HTH or HRH)
+ */
+static void Can_Hw_InitHwObject(const Can_HardwareObjectConfigType *HohCfg)
+{
+ 8000314:	b580      	push	{r7, lr}
+ 8000316:	b082      	sub	sp, #8
+ 8000318:	af00      	add	r7, sp, #0
+ 800031a:	6078      	str	r0, [r7, #4]
+   switch (HohCfg->ObjectType)
+ 800031c:	687b      	ldr	r3, [r7, #4]
+ 800031e:	795b      	ldrb	r3, [r3, #5]
+ 8000320:	2b00      	cmp	r3, #0
+ 8000322:	d005      	beq.n	8000330 <Can_Hw_InitHwObject+0x1c>
+ 8000324:	2b01      	cmp	r3, #1
+ 8000326:	d107      	bne.n	8000338 <Can_Hw_InitHwObject+0x24>
+   {
+   case CAN_HOH_TRANSMIT:
+        Can_lHwInitHth(HohCfg);
+ 8000328:	6878      	ldr	r0, [r7, #4]
+ 800032a:	f000 f80a 	bl	8000342 <Can_lHwInitHth>
+        break;
+ 800032e:	e004      	b.n	800033a <Can_Hw_InitHwObject+0x26>
+
+   case CAN_HOH_RECEIVE:
+        Can_lHwInitHrh(HohCfg);
+ 8000330:	6878      	ldr	r0, [r7, #4]
+ 8000332:	f000 f811 	bl	8000358 <Can_lHwInitHrh>
+        break;
+ 8000336:	e000      	b.n	800033a <Can_Hw_InitHwObject+0x26>
+
+   default:
+        break;
+ 8000338:	bf00      	nop
+   }   
+}
+ 800033a:	bf00      	nop
+ 800033c:	3708      	adds	r7, #8
+ 800033e:	46bd      	mov	sp, r7
+ 8000340:	bd80      	pop	{r7, pc}
+
+08000342 <Can_lHwInitHth>:
+
+/**
+ * @brief: Depend on MCU to configure.There are MCUs which don't need configure TX  
+ */
+static void Can_lHwInitHth(const Can_HardwareObjectConfigType *HthCfg)
+{
+ 8000342:	b480      	push	{r7}
+ 8000344:	b083      	sub	sp, #12
+ 8000346:	af00      	add	r7, sp, #0
+ 8000348:	6078      	str	r0, [r7, #4]
+    //nothing
+}
+ 800034a:	bf00      	nop
+ 800034c:	370c      	adds	r7, #12
+ 800034e:	46bd      	mov	sp, r7
+ 8000350:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000354:	4770      	bx	lr
+	...
+
+08000358 <Can_lHwInitHrh>:
+/**Flow init Hardware Rx Object
+ * Enter Filter Init Mode-> Disable Filter Bank -> Configure Filter Scale -> Configure Filter Mode
+ * Configure FIFO Assignment -> Configure Filter ID / Mask -> Enable Filter Bank -> Leave Filter Init Mode
+ */
+static void Can_lHwInitHrh(const Can_HardwareObjectConfigType *HrhCfg)
+{
+ 8000358:	b480      	push	{r7}
+ 800035a:	b085      	sub	sp, #20
+ 800035c:	af00      	add	r7, sp, #0
+ 800035e:	6078      	str	r0, [r7, #4]
+    /*Get Can Instance have to configure*/
+    CAN_Reg_TypeDef_t *Instance = Can_ControllerInstance[HrhCfg->ControllerId];
+ 8000360:	687b      	ldr	r3, [r7, #4]
+ 8000362:	791b      	ldrb	r3, [r3, #4]
+ 8000364:	461a      	mov	r2, r3
+ 8000366:	4b5c      	ldr	r3, [pc, #368]	@ (80004d8 <Can_lHwInitHrh+0x180>)
+ 8000368:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 800036c:	60fb      	str	r3, [r7, #12]
+    /*Enter filter Hardware Rx Object*/
+    if(HrhCfg->FilterConfig->FilterEnable)
+ 800036e:	687b      	ldr	r3, [r7, #4]
+ 8000370:	689b      	ldr	r3, [r3, #8]
+ 8000372:	781b      	ldrb	r3, [r3, #0]
+ 8000374:	2b00      	cmp	r3, #0
+ 8000376:	f000 80a8 	beq.w	80004ca <Can_lHwInitHrh+0x172>
+    {
+        Instance->FMR |= CAN_FMR_FINIT;
+ 800037a:	68fb      	ldr	r3, [r7, #12]
+ 800037c:	f8d3 3200 	ldr.w	r3, [r3, #512]	@ 0x200
+ 8000380:	f043 0201 	orr.w	r2, r3, #1
+ 8000384:	68fb      	ldr	r3, [r7, #12]
+ 8000386:	f8c3 2200 	str.w	r2, [r3, #512]	@ 0x200
+    }
+    else return;
+
+    /*Disable filter bank*/
+    Instance->FA1R &= ~(1U << HrhCfg->FilterConfig->FilterBank);
+ 800038a:	68fb      	ldr	r3, [r7, #12]
+ 800038c:	f8d3 221c 	ldr.w	r2, [r3, #540]	@ 0x21c
+ 8000390:	687b      	ldr	r3, [r7, #4]
+ 8000392:	689b      	ldr	r3, [r3, #8]
+ 8000394:	785b      	ldrb	r3, [r3, #1]
+ 8000396:	4619      	mov	r1, r3
+ 8000398:	2301      	movs	r3, #1
+ 800039a:	408b      	lsls	r3, r1
+ 800039c:	43db      	mvns	r3, r3
+ 800039e:	401a      	ands	r2, r3
+ 80003a0:	68fb      	ldr	r3, [r7, #12]
+ 80003a2:	f8c3 221c 	str.w	r2, [r3, #540]	@ 0x21c
+    /*Configure Filter Scale*/
+    if(HrhCfg->FilterConfig->FilterScale == CAN_FILTER_SCALE_32BIT)
+ 80003a6:	687b      	ldr	r3, [r7, #4]
+ 80003a8:	689b      	ldr	r3, [r3, #8]
+ 80003aa:	78db      	ldrb	r3, [r3, #3]
+ 80003ac:	2b01      	cmp	r3, #1
+ 80003ae:	d10d      	bne.n	80003cc <Can_lHwInitHrh+0x74>
+    {
+        Instance->FS1R |= (1U << HrhCfg->FilterConfig->FilterBank);
+ 80003b0:	68fb      	ldr	r3, [r7, #12]
+ 80003b2:	f8d3 220c 	ldr.w	r2, [r3, #524]	@ 0x20c
+ 80003b6:	687b      	ldr	r3, [r7, #4]
+ 80003b8:	689b      	ldr	r3, [r3, #8]
+ 80003ba:	785b      	ldrb	r3, [r3, #1]
+ 80003bc:	4619      	mov	r1, r3
+ 80003be:	2301      	movs	r3, #1
+ 80003c0:	408b      	lsls	r3, r1
+ 80003c2:	431a      	orrs	r2, r3
+ 80003c4:	68fb      	ldr	r3, [r7, #12]
+ 80003c6:	f8c3 220c 	str.w	r2, [r3, #524]	@ 0x20c
+ 80003ca:	e00d      	b.n	80003e8 <Can_lHwInitHrh+0x90>
+    }
+    else
+    {
+        Instance->FS1R &= ~(1U << HrhCfg->FilterConfig->FilterBank);
+ 80003cc:	68fb      	ldr	r3, [r7, #12]
+ 80003ce:	f8d3 220c 	ldr.w	r2, [r3, #524]	@ 0x20c
+ 80003d2:	687b      	ldr	r3, [r7, #4]
+ 80003d4:	689b      	ldr	r3, [r3, #8]
+ 80003d6:	785b      	ldrb	r3, [r3, #1]
+ 80003d8:	4619      	mov	r1, r3
+ 80003da:	2301      	movs	r3, #1
+ 80003dc:	408b      	lsls	r3, r1
+ 80003de:	43db      	mvns	r3, r3
+ 80003e0:	401a      	ands	r2, r3
+ 80003e2:	68fb      	ldr	r3, [r7, #12]
+ 80003e4:	f8c3 220c 	str.w	r2, [r3, #524]	@ 0x20c
+    }
+    /*Configure Filter mode*/
+    if(HrhCfg->FilterConfig->FilterMode == CAN_FILTER_MODE_MASK)
+ 80003e8:	687b      	ldr	r3, [r7, #4]
+ 80003ea:	689b      	ldr	r3, [r3, #8]
+ 80003ec:	789b      	ldrb	r3, [r3, #2]
+ 80003ee:	2b00      	cmp	r3, #0
+ 80003f0:	d10e      	bne.n	8000410 <Can_lHwInitHrh+0xb8>
+    {
+        Instance->FM1R &= ~(1U << HrhCfg->FilterConfig->FilterBank);
+ 80003f2:	68fb      	ldr	r3, [r7, #12]
+ 80003f4:	f8d3 2204 	ldr.w	r2, [r3, #516]	@ 0x204
+ 80003f8:	687b      	ldr	r3, [r7, #4]
+ 80003fa:	689b      	ldr	r3, [r3, #8]
+ 80003fc:	785b      	ldrb	r3, [r3, #1]
+ 80003fe:	4619      	mov	r1, r3
+ 8000400:	2301      	movs	r3, #1
+ 8000402:	408b      	lsls	r3, r1
+ 8000404:	43db      	mvns	r3, r3
+ 8000406:	401a      	ands	r2, r3
+ 8000408:	68fb      	ldr	r3, [r7, #12]
+ 800040a:	f8c3 2204 	str.w	r2, [r3, #516]	@ 0x204
+ 800040e:	e00c      	b.n	800042a <Can_lHwInitHrh+0xd2>
+    }
+    else
+    {
+        Instance->FM1R |= (1U << HrhCfg->FilterConfig->FilterBank);
+ 8000410:	68fb      	ldr	r3, [r7, #12]
+ 8000412:	f8d3 2204 	ldr.w	r2, [r3, #516]	@ 0x204
+ 8000416:	687b      	ldr	r3, [r7, #4]
+ 8000418:	689b      	ldr	r3, [r3, #8]
+ 800041a:	785b      	ldrb	r3, [r3, #1]
+ 800041c:	4619      	mov	r1, r3
+ 800041e:	2301      	movs	r3, #1
+ 8000420:	408b      	lsls	r3, r1
+ 8000422:	431a      	orrs	r2, r3
+ 8000424:	68fb      	ldr	r3, [r7, #12]
+ 8000426:	f8c3 2204 	str.w	r2, [r3, #516]	@ 0x204
+    }
+    /*Configure FIFO Assignment*/
+    if(HrhCfg->FilterConfig->FifoAssignment == CAN_RX_FIFO0)
+ 800042a:	687b      	ldr	r3, [r7, #4]
+ 800042c:	689b      	ldr	r3, [r3, #8]
+ 800042e:	7b1b      	ldrb	r3, [r3, #12]
+ 8000430:	2b00      	cmp	r3, #0
+ 8000432:	d10e      	bne.n	8000452 <Can_lHwInitHrh+0xfa>
+    {
+        Instance->FFA1R &= ~(1U << HrhCfg->FilterConfig->FilterBank);
+ 8000434:	68fb      	ldr	r3, [r7, #12]
+ 8000436:	f8d3 2214 	ldr.w	r2, [r3, #532]	@ 0x214
+ 800043a:	687b      	ldr	r3, [r7, #4]
+ 800043c:	689b      	ldr	r3, [r3, #8]
+ 800043e:	785b      	ldrb	r3, [r3, #1]
+ 8000440:	4619      	mov	r1, r3
+ 8000442:	2301      	movs	r3, #1
+ 8000444:	408b      	lsls	r3, r1
+ 8000446:	43db      	mvns	r3, r3
+ 8000448:	401a      	ands	r2, r3
+ 800044a:	68fb      	ldr	r3, [r7, #12]
+ 800044c:	f8c3 2214 	str.w	r2, [r3, #532]	@ 0x214
+ 8000450:	e00c      	b.n	800046c <Can_lHwInitHrh+0x114>
+    }
+    else
+    {
+        Instance->FFA1R |= (1U << HrhCfg->FilterConfig->FilterBank);
+ 8000452:	68fb      	ldr	r3, [r7, #12]
+ 8000454:	f8d3 2214 	ldr.w	r2, [r3, #532]	@ 0x214
+ 8000458:	687b      	ldr	r3, [r7, #4]
+ 800045a:	689b      	ldr	r3, [r3, #8]
+ 800045c:	785b      	ldrb	r3, [r3, #1]
+ 800045e:	4619      	mov	r1, r3
+ 8000460:	2301      	movs	r3, #1
+ 8000462:	408b      	lsls	r3, r1
+ 8000464:	431a      	orrs	r2, r3
+ 8000466:	68fb      	ldr	r3, [r7, #12]
+ 8000468:	f8c3 2214 	str.w	r2, [r3, #532]	@ 0x214
+    }
+    /*Mask and ID*/
+    Instance->sFilterRegister[HrhCfg->FilterConfig->FilterBank].FR1 = HrhCfg->FilterConfig->FilterId << 21U;
+ 800046c:	687b      	ldr	r3, [r7, #4]
+ 800046e:	689b      	ldr	r3, [r3, #8]
+ 8000470:	685b      	ldr	r3, [r3, #4]
+ 8000472:	687a      	ldr	r2, [r7, #4]
+ 8000474:	6892      	ldr	r2, [r2, #8]
+ 8000476:	7852      	ldrb	r2, [r2, #1]
+ 8000478:	0559      	lsls	r1, r3, #21
+ 800047a:	68fb      	ldr	r3, [r7, #12]
+ 800047c:	3248      	adds	r2, #72	@ 0x48
+ 800047e:	f843 1032 	str.w	r1, [r3, r2, lsl #3]
+    Instance->sFilterRegister[HrhCfg->FilterConfig->FilterBank].FR2 = HrhCfg->FilterConfig->FilterMask << 21U;
+ 8000482:	687b      	ldr	r3, [r7, #4]
+ 8000484:	689b      	ldr	r3, [r3, #8]
+ 8000486:	689b      	ldr	r3, [r3, #8]
+ 8000488:	687a      	ldr	r2, [r7, #4]
+ 800048a:	6892      	ldr	r2, [r2, #8]
+ 800048c:	7852      	ldrb	r2, [r2, #1]
+ 800048e:	4610      	mov	r0, r2
+ 8000490:	055a      	lsls	r2, r3, #21
+ 8000492:	68f9      	ldr	r1, [r7, #12]
+ 8000494:	f100 0348 	add.w	r3, r0, #72	@ 0x48
+ 8000498:	00db      	lsls	r3, r3, #3
+ 800049a:	440b      	add	r3, r1
+ 800049c:	605a      	str	r2, [r3, #4]
+    /*Activate filter bank*/
+    Instance->FA1R |= (1U << HrhCfg->FilterConfig->FilterBank);
+ 800049e:	68fb      	ldr	r3, [r7, #12]
+ 80004a0:	f8d3 221c 	ldr.w	r2, [r3, #540]	@ 0x21c
+ 80004a4:	687b      	ldr	r3, [r7, #4]
+ 80004a6:	689b      	ldr	r3, [r3, #8]
+ 80004a8:	785b      	ldrb	r3, [r3, #1]
+ 80004aa:	4619      	mov	r1, r3
+ 80004ac:	2301      	movs	r3, #1
+ 80004ae:	408b      	lsls	r3, r1
+ 80004b0:	431a      	orrs	r2, r3
+ 80004b2:	68fb      	ldr	r3, [r7, #12]
+ 80004b4:	f8c3 221c 	str.w	r2, [r3, #540]	@ 0x21c
+    /*Leave filter init*/
+    Instance->FMR &= ~(CAN_FMR_FINIT);
+ 80004b8:	68fb      	ldr	r3, [r7, #12]
+ 80004ba:	f8d3 3200 	ldr.w	r3, [r3, #512]	@ 0x200
+ 80004be:	f023 0201 	bic.w	r2, r3, #1
+ 80004c2:	68fb      	ldr	r3, [r7, #12]
+ 80004c4:	f8c3 2200 	str.w	r2, [r3, #512]	@ 0x200
+ 80004c8:	e000      	b.n	80004cc <Can_lHwInitHrh+0x174>
+    else return;
+ 80004ca:	bf00      	nop
+}
+ 80004cc:	3714      	adds	r7, #20
+ 80004ce:	46bd      	mov	sp, r7
+ 80004d0:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80004d4:	4770      	bx	lr
+ 80004d6:	bf00      	nop
+ 80004d8:	20000004 	.word	0x20000004
+
+080004dc <Can_Init>:
+/**
+ * @brief Initializes the CAN driver.
+ * @param Config Pointer to the CAN configuration structure.
+ */
+void Can_Init(const Can_ConfigType *Config)
+{
+ 80004dc:	b580      	push	{r7, lr}
+ 80004de:	b082      	sub	sp, #8
+ 80004e0:	af00      	add	r7, sp, #0
+ 80004e2:	6078      	str	r0, [r7, #4]
+    if (Config == NULL_PTR)
+ 80004e4:	687b      	ldr	r3, [r7, #4]
+ 80004e6:	2b00      	cmp	r3, #0
+ 80004e8:	d00e      	beq.n	8000508 <Can_Init+0x2c>
+    {
+        return;
+    }
+
+    /*Check driver state*/
+    if (Can_DriverState != CAN_UNINIT)
+ 80004ea:	4b0a      	ldr	r3, [pc, #40]	@ (8000514 <Can_Init+0x38>)
+ 80004ec:	781b      	ldrb	r3, [r3, #0]
+ 80004ee:	2b00      	cmp	r3, #0
+ 80004f0:	d10c      	bne.n	800050c <Can_Init+0x30>
+    {
+        return;
+    }
+
+    ConfigPtr = Config;
+ 80004f2:	4a09      	ldr	r2, [pc, #36]	@ (8000518 <Can_Init+0x3c>)
+ 80004f4:	687b      	ldr	r3, [r7, #4]
+ 80004f6:	6013      	str	r3, [r2, #0]
+
+    Can_lInitController();
+ 80004f8:	f7ff fe88 	bl	800020c <Can_lInitController>
+    Can_lInitHardwareObject();
+ 80004fc:	f7ff feb0 	bl	8000260 <Can_lInitHardwareObject>
+
+    Can_DriverState = CAN_READY;
+ 8000500:	4b04      	ldr	r3, [pc, #16]	@ (8000514 <Can_Init+0x38>)
+ 8000502:	2201      	movs	r2, #1
+ 8000504:	701a      	strb	r2, [r3, #0]
+ 8000506:	e002      	b.n	800050e <Can_Init+0x32>
+        return;
+ 8000508:	bf00      	nop
+ 800050a:	e000      	b.n	800050e <Can_Init+0x32>
+        return;
+ 800050c:	bf00      	nop
+}
+ 800050e:	3708      	adds	r7, #8
+ 8000510:	46bd      	mov	sp, r7
+ 8000512:	bd80      	pop	{r7, pc}
+ 8000514:	2000004c 	.word	0x2000004c
+ 8000518:	20000048 	.word	0x20000048
+
+0800051c <Can_SetBaudrate>:
+/**
+ * @brief Set baudrate for Can_Controller
+ * @param Controller BaudRateConfigID
+ */
+void Can_SetBaudrate(uint8 Controller, uint16 BaudRateConfigID)
+{
+ 800051c:	b480      	push	{r7}
+ 800051e:	b085      	sub	sp, #20
+ 8000520:	af00      	add	r7, sp, #0
+ 8000522:	4603      	mov	r3, r0
+ 8000524:	460a      	mov	r2, r1
+ 8000526:	71fb      	strb	r3, [r7, #7]
+ 8000528:	4613      	mov	r3, r2
+ 800052a:	80bb      	strh	r3, [r7, #4]
+    if (Can_ControllerState[Controller] != CAN_CS_STOPPED)
+ 800052c:	79fb      	ldrb	r3, [r7, #7]
+ 800052e:	4a55      	ldr	r2, [pc, #340]	@ (8000684 <Can_SetBaudrate+0x168>)
+ 8000530:	5cd3      	ldrb	r3, [r2, r3]
+ 8000532:	2b02      	cmp	r3, #2
+ 8000534:	f040 809f 	bne.w	8000676 <Can_SetBaudrate+0x15a>
+    {
+        return;
+    }
+
+    for (uint8 i = 0; i < ConfigPtr->ControllerConfigs->NumBaudrates; i++)
+ 8000538:	2300      	movs	r3, #0
+ 800053a:	73fb      	strb	r3, [r7, #15]
+ 800053c:	e092      	b.n	8000664 <Can_SetBaudrate+0x148>
+    {
+        if (BaudRateConfigID == BaudConfigPtr[i].BaudrateConfigID)
+ 800053e:	4b52      	ldr	r3, [pc, #328]	@ (8000688 <Can_SetBaudrate+0x16c>)
+ 8000540:	681a      	ldr	r2, [r3, #0]
+ 8000542:	7bfb      	ldrb	r3, [r7, #15]
+ 8000544:	00db      	lsls	r3, r3, #3
+ 8000546:	4413      	add	r3, r2
+ 8000548:	881b      	ldrh	r3, [r3, #0]
+ 800054a:	88ba      	ldrh	r2, [r7, #4]
+ 800054c:	429a      	cmp	r2, r3
+ 800054e:	f040 8086 	bne.w	800065e <Can_SetBaudrate+0x142>
+        {
+            /*At here i is index of configuration array which contain corresponding BaudrateID*/
+
+            uint8 SJW = BaudConfigPtr[i].SJW - 1U;
+ 8000552:	4b4d      	ldr	r3, [pc, #308]	@ (8000688 <Can_SetBaudrate+0x16c>)
+ 8000554:	681a      	ldr	r2, [r3, #0]
+ 8000556:	7bfb      	ldrb	r3, [r7, #15]
+ 8000558:	00db      	lsls	r3, r3, #3
+ 800055a:	4413      	add	r3, r2
+ 800055c:	791b      	ldrb	r3, [r3, #4]
+ 800055e:	3b01      	subs	r3, #1
+ 8000560:	73bb      	strb	r3, [r7, #14]
+            uint8 BS1 = BaudConfigPtr[i].BS1 - 1U;
+ 8000562:	4b49      	ldr	r3, [pc, #292]	@ (8000688 <Can_SetBaudrate+0x16c>)
+ 8000564:	681a      	ldr	r2, [r3, #0]
+ 8000566:	7bfb      	ldrb	r3, [r7, #15]
+ 8000568:	00db      	lsls	r3, r3, #3
+ 800056a:	4413      	add	r3, r2
+ 800056c:	795b      	ldrb	r3, [r3, #5]
+ 800056e:	3b01      	subs	r3, #1
+ 8000570:	737b      	strb	r3, [r7, #13]
+            uint8 BS2 = BaudConfigPtr[i].BS2 - 1U;
+ 8000572:	4b45      	ldr	r3, [pc, #276]	@ (8000688 <Can_SetBaudrate+0x16c>)
+ 8000574:	681a      	ldr	r2, [r3, #0]
+ 8000576:	7bfb      	ldrb	r3, [r7, #15]
+ 8000578:	00db      	lsls	r3, r3, #3
+ 800057a:	4413      	add	r3, r2
+ 800057c:	799b      	ldrb	r3, [r3, #6]
+ 800057e:	3b01      	subs	r3, #1
+ 8000580:	733b      	strb	r3, [r7, #12]
+            uint32 Prescaler = BaudConfigPtr[i].Prescaler - 1U;
+ 8000582:	4b41      	ldr	r3, [pc, #260]	@ (8000688 <Can_SetBaudrate+0x16c>)
+ 8000584:	681a      	ldr	r2, [r3, #0]
+ 8000586:	7bfb      	ldrb	r3, [r7, #15]
+ 8000588:	00db      	lsls	r3, r3, #3
+ 800058a:	4413      	add	r3, r2
+ 800058c:	885b      	ldrh	r3, [r3, #2]
+ 800058e:	3b01      	subs	r3, #1
+ 8000590:	60bb      	str	r3, [r7, #8]
+
+            Can_ControllerInstance[Controller]->BTR &= ~CAN_BTR_BRP_Msk;
+ 8000592:	79fb      	ldrb	r3, [r7, #7]
+ 8000594:	4a3d      	ldr	r2, [pc, #244]	@ (800068c <Can_SetBaudrate+0x170>)
+ 8000596:	f852 3023 	ldr.w	r3, [r2, r3, lsl #2]
+ 800059a:	69db      	ldr	r3, [r3, #28]
+ 800059c:	79fa      	ldrb	r2, [r7, #7]
+ 800059e:	493b      	ldr	r1, [pc, #236]	@ (800068c <Can_SetBaudrate+0x170>)
+ 80005a0:	f851 2022 	ldr.w	r2, [r1, r2, lsl #2]
+ 80005a4:	f423 737f 	bic.w	r3, r3, #1020	@ 0x3fc
+ 80005a8:	f023 0303 	bic.w	r3, r3, #3
+ 80005ac:	61d3      	str	r3, [r2, #28]
+            Can_ControllerInstance[Controller]->BTR |= (Prescaler << CAN_BTR_BRP_Pos);
+ 80005ae:	79fb      	ldrb	r3, [r7, #7]
+ 80005b0:	4a36      	ldr	r2, [pc, #216]	@ (800068c <Can_SetBaudrate+0x170>)
+ 80005b2:	f852 3023 	ldr.w	r3, [r2, r3, lsl #2]
+ 80005b6:	69d9      	ldr	r1, [r3, #28]
+ 80005b8:	79fb      	ldrb	r3, [r7, #7]
+ 80005ba:	4a34      	ldr	r2, [pc, #208]	@ (800068c <Can_SetBaudrate+0x170>)
+ 80005bc:	f852 3023 	ldr.w	r3, [r2, r3, lsl #2]
+ 80005c0:	68ba      	ldr	r2, [r7, #8]
+ 80005c2:	430a      	orrs	r2, r1
+ 80005c4:	61da      	str	r2, [r3, #28]
+  
+            Can_ControllerInstance[Controller]->BTR &= ~CAN_BTR_SJW_Msk;
+ 80005c6:	79fb      	ldrb	r3, [r7, #7]
+ 80005c8:	4a30      	ldr	r2, [pc, #192]	@ (800068c <Can_SetBaudrate+0x170>)
+ 80005ca:	f852 3023 	ldr.w	r3, [r2, r3, lsl #2]
+ 80005ce:	69da      	ldr	r2, [r3, #28]
+ 80005d0:	79fb      	ldrb	r3, [r7, #7]
+ 80005d2:	492e      	ldr	r1, [pc, #184]	@ (800068c <Can_SetBaudrate+0x170>)
+ 80005d4:	f851 3023 	ldr.w	r3, [r1, r3, lsl #2]
+ 80005d8:	f022 7240 	bic.w	r2, r2, #50331648	@ 0x3000000
+ 80005dc:	61da      	str	r2, [r3, #28]
+            Can_ControllerInstance[Controller]->BTR |= SJW << CAN_BTR_SJW_Pos;
+ 80005de:	79fb      	ldrb	r3, [r7, #7]
+ 80005e0:	4a2a      	ldr	r2, [pc, #168]	@ (800068c <Can_SetBaudrate+0x170>)
+ 80005e2:	f852 3023 	ldr.w	r3, [r2, r3, lsl #2]
+ 80005e6:	69d9      	ldr	r1, [r3, #28]
+ 80005e8:	7bbb      	ldrb	r3, [r7, #14]
+ 80005ea:	061a      	lsls	r2, r3, #24
+ 80005ec:	79fb      	ldrb	r3, [r7, #7]
+ 80005ee:	4827      	ldr	r0, [pc, #156]	@ (800068c <Can_SetBaudrate+0x170>)
+ 80005f0:	f850 3023 	ldr.w	r3, [r0, r3, lsl #2]
+ 80005f4:	430a      	orrs	r2, r1
+ 80005f6:	61da      	str	r2, [r3, #28]
+
+            Can_ControllerInstance[Controller]->BTR &= ~CAN_BTR_TS1_Msk;
+ 80005f8:	79fb      	ldrb	r3, [r7, #7]
+ 80005fa:	4a24      	ldr	r2, [pc, #144]	@ (800068c <Can_SetBaudrate+0x170>)
+ 80005fc:	f852 3023 	ldr.w	r3, [r2, r3, lsl #2]
+ 8000600:	69da      	ldr	r2, [r3, #28]
+ 8000602:	79fb      	ldrb	r3, [r7, #7]
+ 8000604:	4921      	ldr	r1, [pc, #132]	@ (800068c <Can_SetBaudrate+0x170>)
+ 8000606:	f851 3023 	ldr.w	r3, [r1, r3, lsl #2]
+ 800060a:	f422 2270 	bic.w	r2, r2, #983040	@ 0xf0000
+ 800060e:	61da      	str	r2, [r3, #28]
+            Can_ControllerInstance[Controller]->BTR |= BS1 << CAN_BTR_TS1_Pos;
+ 8000610:	79fb      	ldrb	r3, [r7, #7]
+ 8000612:	4a1e      	ldr	r2, [pc, #120]	@ (800068c <Can_SetBaudrate+0x170>)
+ 8000614:	f852 3023 	ldr.w	r3, [r2, r3, lsl #2]
+ 8000618:	69d9      	ldr	r1, [r3, #28]
+ 800061a:	7b7b      	ldrb	r3, [r7, #13]
+ 800061c:	041a      	lsls	r2, r3, #16
+ 800061e:	79fb      	ldrb	r3, [r7, #7]
+ 8000620:	481a      	ldr	r0, [pc, #104]	@ (800068c <Can_SetBaudrate+0x170>)
+ 8000622:	f850 3023 	ldr.w	r3, [r0, r3, lsl #2]
+ 8000626:	430a      	orrs	r2, r1
+ 8000628:	61da      	str	r2, [r3, #28]
+
+            Can_ControllerInstance[Controller]->BTR &= ~CAN_BTR_TS2_Msk;
+ 800062a:	79fb      	ldrb	r3, [r7, #7]
+ 800062c:	4a17      	ldr	r2, [pc, #92]	@ (800068c <Can_SetBaudrate+0x170>)
+ 800062e:	f852 3023 	ldr.w	r3, [r2, r3, lsl #2]
+ 8000632:	69da      	ldr	r2, [r3, #28]
+ 8000634:	79fb      	ldrb	r3, [r7, #7]
+ 8000636:	4915      	ldr	r1, [pc, #84]	@ (800068c <Can_SetBaudrate+0x170>)
+ 8000638:	f851 3023 	ldr.w	r3, [r1, r3, lsl #2]
+ 800063c:	f422 02e0 	bic.w	r2, r2, #7340032	@ 0x700000
+ 8000640:	61da      	str	r2, [r3, #28]
+            Can_ControllerInstance[Controller]->BTR |= BS2 << CAN_BTR_TS2_Pos;
+ 8000642:	79fb      	ldrb	r3, [r7, #7]
+ 8000644:	4a11      	ldr	r2, [pc, #68]	@ (800068c <Can_SetBaudrate+0x170>)
+ 8000646:	f852 3023 	ldr.w	r3, [r2, r3, lsl #2]
+ 800064a:	69d9      	ldr	r1, [r3, #28]
+ 800064c:	7b3b      	ldrb	r3, [r7, #12]
+ 800064e:	051a      	lsls	r2, r3, #20
+ 8000650:	79fb      	ldrb	r3, [r7, #7]
+ 8000652:	480e      	ldr	r0, [pc, #56]	@ (800068c <Can_SetBaudrate+0x170>)
+ 8000654:	f850 3023 	ldr.w	r3, [r0, r3, lsl #2]
+ 8000658:	430a      	orrs	r2, r1
+ 800065a:	61da      	str	r2, [r3, #28]
+
+            break;
+ 800065c:	e00c      	b.n	8000678 <Can_SetBaudrate+0x15c>
+    for (uint8 i = 0; i < ConfigPtr->ControllerConfigs->NumBaudrates; i++)
+ 800065e:	7bfb      	ldrb	r3, [r7, #15]
+ 8000660:	3301      	adds	r3, #1
+ 8000662:	73fb      	strb	r3, [r7, #15]
+ 8000664:	4b0a      	ldr	r3, [pc, #40]	@ (8000690 <Can_SetBaudrate+0x174>)
+ 8000666:	681b      	ldr	r3, [r3, #0]
+ 8000668:	681b      	ldr	r3, [r3, #0]
+ 800066a:	7a1b      	ldrb	r3, [r3, #8]
+ 800066c:	7bfa      	ldrb	r2, [r7, #15]
+ 800066e:	429a      	cmp	r2, r3
+ 8000670:	f4ff af65 	bcc.w	800053e <Can_SetBaudrate+0x22>
+ 8000674:	e000      	b.n	8000678 <Can_SetBaudrate+0x15c>
+        return;
+ 8000676:	bf00      	nop
+        }
+    }
+ 8000678:	3714      	adds	r7, #20
+ 800067a:	46bd      	mov	sp, r7
+ 800067c:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000680:	4770      	bx	lr
+ 8000682:	bf00      	nop
+ 8000684:	20000050 	.word	0x20000050
+ 8000688:	20000000 	.word	0x20000000
+ 800068c:	20000004 	.word	0x20000004
+ 8000690:	20000048 	.word	0x20000048
+
+08000694 <Dio_FlipChannel>:
+ * @brief Flips the level of a specific channel in the DIO module.
+ * @param ChannelId The identifier of the channel to be flipped.
+ * @return The new level of the channel after flipping.
+ */
+Dio_LevelType Dio_FlipChannel(Dio_ChannelType ChannelId)
+{
+ 8000694:	b480      	push	{r7}
+ 8000696:	b085      	sub	sp, #20
+ 8000698:	af00      	add	r7, sp, #0
+ 800069a:	4603      	mov	r3, r0
+ 800069c:	80fb      	strh	r3, [r7, #6]
+    uint8 port = ChannelId >> 8U; // Extract the port number from the ChannelId
+ 800069e:	88fb      	ldrh	r3, [r7, #6]
+ 80006a0:	0a1b      	lsrs	r3, r3, #8
+ 80006a2:	b29b      	uxth	r3, r3
+ 80006a4:	73fb      	strb	r3, [r7, #15]
+    uint8 channel = ChannelId & 0xFFU; // Extract the channel number from the ChannelId
+ 80006a6:	88fb      	ldrh	r3, [r7, #6]
+ 80006a8:	73bb      	strb	r3, [r7, #14]
+
+    /*Toggle the bit corresponding to the channel*/
+    GPIO_Ports_Table[port]->ODR ^= (1U << channel);
+ 80006aa:	7bfb      	ldrb	r3, [r7, #15]
+ 80006ac:	4a10      	ldr	r2, [pc, #64]	@ (80006f0 <Dio_FlipChannel+0x5c>)
+ 80006ae:	f852 3023 	ldr.w	r3, [r2, r3, lsl #2]
+ 80006b2:	6959      	ldr	r1, [r3, #20]
+ 80006b4:	7bbb      	ldrb	r3, [r7, #14]
+ 80006b6:	2201      	movs	r2, #1
+ 80006b8:	409a      	lsls	r2, r3
+ 80006ba:	7bfb      	ldrb	r3, [r7, #15]
+ 80006bc:	480c      	ldr	r0, [pc, #48]	@ (80006f0 <Dio_FlipChannel+0x5c>)
+ 80006be:	f850 3023 	ldr.w	r3, [r0, r3, lsl #2]
+ 80006c2:	404a      	eors	r2, r1
+ 80006c4:	615a      	str	r2, [r3, #20]
+
+    return GPIO_Ports_Table[port]->ODR & (1U << channel) ? STD_HIGH : STD_LOW;
+ 80006c6:	7bfb      	ldrb	r3, [r7, #15]
+ 80006c8:	4a09      	ldr	r2, [pc, #36]	@ (80006f0 <Dio_FlipChannel+0x5c>)
+ 80006ca:	f852 3023 	ldr.w	r3, [r2, r3, lsl #2]
+ 80006ce:	695a      	ldr	r2, [r3, #20]
+ 80006d0:	7bbb      	ldrb	r3, [r7, #14]
+ 80006d2:	2101      	movs	r1, #1
+ 80006d4:	fa01 f303 	lsl.w	r3, r1, r3
+ 80006d8:	4013      	ands	r3, r2
+ 80006da:	2b00      	cmp	r3, #0
+ 80006dc:	d001      	beq.n	80006e2 <Dio_FlipChannel+0x4e>
+ 80006de:	2301      	movs	r3, #1
+ 80006e0:	e000      	b.n	80006e4 <Dio_FlipChannel+0x50>
+ 80006e2:	2300      	movs	r3, #0
+}
+ 80006e4:	4618      	mov	r0, r3
+ 80006e6:	3714      	adds	r7, #20
+ 80006e8:	46bd      	mov	sp, r7
+ 80006ea:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80006ee:	4770      	bx	lr
+ 80006f0:	2000000c 	.word	0x2000000c
+
+080006f4 <Mcu_lConvertPllpDivtoBitValue>:
+/**
+ * 
+ */
+
+uint8 Mcu_lConvertPllpDivtoBitValue(uint8 Pllp)
+{
+ 80006f4:	b480      	push	{r7}
+ 80006f6:	b083      	sub	sp, #12
+ 80006f8:	af00      	add	r7, sp, #0
+ 80006fa:	4603      	mov	r3, r0
+ 80006fc:	71fb      	strb	r3, [r7, #7]
+    switch(Pllp)
+ 80006fe:	79fb      	ldrb	r3, [r7, #7]
+ 8000700:	3b02      	subs	r3, #2
+ 8000702:	2b06      	cmp	r3, #6
+ 8000704:	d818      	bhi.n	8000738 <Mcu_lConvertPllpDivtoBitValue+0x44>
+ 8000706:	a201      	add	r2, pc, #4	@ (adr r2, 800070c <Mcu_lConvertPllpDivtoBitValue+0x18>)
+ 8000708:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 800070c:	08000729 	.word	0x08000729
+ 8000710:	08000739 	.word	0x08000739
+ 8000714:	0800072d 	.word	0x0800072d
+ 8000718:	08000739 	.word	0x08000739
+ 800071c:	08000731 	.word	0x08000731
+ 8000720:	08000739 	.word	0x08000739
+ 8000724:	08000735 	.word	0x08000735
+    {
+        case 2U:
+            return RCC_PLLP_DIV2;
+ 8000728:	2300      	movs	r3, #0
+ 800072a:	e006      	b.n	800073a <Mcu_lConvertPllpDivtoBitValue+0x46>
+        case 4U:
+            return RCC_PLLP_DIV4;
+ 800072c:	2301      	movs	r3, #1
+ 800072e:	e004      	b.n	800073a <Mcu_lConvertPllpDivtoBitValue+0x46>
+        case 6U:
+            return RCC_PLLP_DIV6;
+ 8000730:	2302      	movs	r3, #2
+ 8000732:	e002      	b.n	800073a <Mcu_lConvertPllpDivtoBitValue+0x46>
+        case 8U:
+            return RCC_PLLP_DIV8;
+ 8000734:	2303      	movs	r3, #3
+ 8000736:	e000      	b.n	800073a <Mcu_lConvertPllpDivtoBitValue+0x46>
+
+        default:
+            return RCC_PLLP_DIV2;
+ 8000738:	2300      	movs	r3, #0
+    }
+}
+ 800073a:	4618      	mov	r0, r3
+ 800073c:	370c      	adds	r7, #12
+ 800073e:	46bd      	mov	sp, r7
+ 8000740:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000744:	4770      	bx	lr
+ 8000746:	bf00      	nop
+
+08000748 <Mcu_lEnableHSE>:
+
+/**
+ * @brief: Enable HSE 
+ */
+static inline void Mcu_lEnableHSE(void)
+{
+ 8000748:	b480      	push	{r7}
+ 800074a:	af00      	add	r7, sp, #0
+    RCC->CR |= RCC_CR_HSEON;
+ 800074c:	4b09      	ldr	r3, [pc, #36]	@ (8000774 <Mcu_lEnableHSE+0x2c>)
+ 800074e:	681b      	ldr	r3, [r3, #0]
+ 8000750:	4a08      	ldr	r2, [pc, #32]	@ (8000774 <Mcu_lEnableHSE+0x2c>)
+ 8000752:	f443 3380 	orr.w	r3, r3, #65536	@ 0x10000
+ 8000756:	6013      	str	r3, [r2, #0]
+    while(!(RCC->CR & RCC_CR_HSERDY))
+ 8000758:	bf00      	nop
+ 800075a:	4b06      	ldr	r3, [pc, #24]	@ (8000774 <Mcu_lEnableHSE+0x2c>)
+ 800075c:	681b      	ldr	r3, [r3, #0]
+ 800075e:	f403 3300 	and.w	r3, r3, #131072	@ 0x20000
+ 8000762:	2b00      	cmp	r3, #0
+ 8000764:	d0f9      	beq.n	800075a <Mcu_lEnableHSE+0x12>
+    {
+        //wait to HSERDY is set
+    }
+}
+ 8000766:	bf00      	nop
+ 8000768:	bf00      	nop
+ 800076a:	46bd      	mov	sp, r7
+ 800076c:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000770:	4770      	bx	lr
+ 8000772:	bf00      	nop
+ 8000774:	40023800 	.word	0x40023800
+
+08000778 <Mcu_lSelectPllSource>:
+ * @brief Select Pll Source according to configuration parameter in pointer Mcu_ConfigPtr
+ * 0: HSI clock selected as PLL and PLLI2S clock entry
+ * 1: HSE oscillator clock selected as PLL and PLLI2S clock entry
+ */
+static inline void Mcu_lSelectPllSource(const Mcu_ClockConfigType* ClkConfig)
+{
+ 8000778:	b580      	push	{r7, lr}
+ 800077a:	b082      	sub	sp, #8
+ 800077c:	af00      	add	r7, sp, #0
+ 800077e:	6078      	str	r0, [r7, #4]
+    if(ClkConfig->PllSource == MCU_PLL_SOURCE_HSE)
+ 8000780:	687b      	ldr	r3, [r7, #4]
+ 8000782:	7a5b      	ldrb	r3, [r3, #9]
+ 8000784:	2b01      	cmp	r3, #1
+ 8000786:	d107      	bne.n	8000798 <Mcu_lSelectPllSource+0x20>
+    {
+        Mcu_lEnableHSE();
+ 8000788:	f7ff ffde 	bl	8000748 <Mcu_lEnableHSE>
+        RCC->PLLCFGR |= RCC_PLLCFGR_PLLSRC;
+ 800078c:	4b09      	ldr	r3, [pc, #36]	@ (80007b4 <Mcu_lSelectPllSource+0x3c>)
+ 800078e:	685b      	ldr	r3, [r3, #4]
+ 8000790:	4a08      	ldr	r2, [pc, #32]	@ (80007b4 <Mcu_lSelectPllSource+0x3c>)
+ 8000792:	f443 0380 	orr.w	r3, r3, #4194304	@ 0x400000
+ 8000796:	6053      	str	r3, [r2, #4]
+    }
+    if(ClkConfig->PllSource == MCU_PLL_SOURCE_HSI)
+ 8000798:	687b      	ldr	r3, [r7, #4]
+ 800079a:	7a5b      	ldrb	r3, [r3, #9]
+ 800079c:	2b00      	cmp	r3, #0
+ 800079e:	d105      	bne.n	80007ac <Mcu_lSelectPllSource+0x34>
+    {
+        RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLSRC;
+ 80007a0:	4b04      	ldr	r3, [pc, #16]	@ (80007b4 <Mcu_lSelectPllSource+0x3c>)
+ 80007a2:	685b      	ldr	r3, [r3, #4]
+ 80007a4:	4a03      	ldr	r2, [pc, #12]	@ (80007b4 <Mcu_lSelectPllSource+0x3c>)
+ 80007a6:	f423 0380 	bic.w	r3, r3, #4194304	@ 0x400000
+ 80007aa:	6053      	str	r3, [r2, #4]
+    }
+}
+ 80007ac:	bf00      	nop
+ 80007ae:	3708      	adds	r7, #8
+ 80007b0:	46bd      	mov	sp, r7
+ 80007b2:	bd80      	pop	{r7, pc}
+ 80007b4:	40023800 	.word	0x40023800
+
+080007b8 <Mcu_lConfigurePll>:
+
+/**
+ * @brief: configurate clock comply by defined paramaters in ClkConfig
+ */
+static void Mcu_lConfigurePll(const Mcu_ClockConfigType* ClkConfig)
+{
+ 80007b8:	b580      	push	{r7, lr}
+ 80007ba:	b084      	sub	sp, #16
+ 80007bc:	af00      	add	r7, sp, #0
+ 80007be:	6078      	str	r0, [r7, #4]
+    /*configure PLLQ*/
+    RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLQ;
+ 80007c0:	4b36      	ldr	r3, [pc, #216]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 80007c2:	685b      	ldr	r3, [r3, #4]
+ 80007c4:	4a35      	ldr	r2, [pc, #212]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 80007c6:	f023 6370 	bic.w	r3, r3, #251658240	@ 0xf000000
+ 80007ca:	6053      	str	r3, [r2, #4]
+    RCC->PLLCFGR |= (ClkConfig->PllQ << RCC_PLLCFGR_PLLQ_Pos);
+ 80007cc:	4b33      	ldr	r3, [pc, #204]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 80007ce:	685a      	ldr	r2, [r3, #4]
+ 80007d0:	687b      	ldr	r3, [r7, #4]
+ 80007d2:	7f5b      	ldrb	r3, [r3, #29]
+ 80007d4:	061b      	lsls	r3, r3, #24
+ 80007d6:	4931      	ldr	r1, [pc, #196]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 80007d8:	4313      	orrs	r3, r2
+ 80007da:	604b      	str	r3, [r1, #4]
+    /*configure PLLM*/
+    RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLM;
+ 80007dc:	4b2f      	ldr	r3, [pc, #188]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 80007de:	685b      	ldr	r3, [r3, #4]
+ 80007e0:	4a2e      	ldr	r2, [pc, #184]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 80007e2:	f023 033f 	bic.w	r3, r3, #63	@ 0x3f
+ 80007e6:	6053      	str	r3, [r2, #4]
+    RCC->PLLCFGR |= (ClkConfig->PllM << RCC_PLLCFGR_PLLM_Pos);
+ 80007e8:	4b2c      	ldr	r3, [pc, #176]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 80007ea:	685b      	ldr	r3, [r3, #4]
+ 80007ec:	687a      	ldr	r2, [r7, #4]
+ 80007ee:	7e12      	ldrb	r2, [r2, #24]
+ 80007f0:	4611      	mov	r1, r2
+ 80007f2:	4a2a      	ldr	r2, [pc, #168]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 80007f4:	430b      	orrs	r3, r1
+ 80007f6:	6053      	str	r3, [r2, #4]
+    /*Configure PLLN*/
+    RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLN;
+ 80007f8:	4b28      	ldr	r3, [pc, #160]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 80007fa:	685b      	ldr	r3, [r3, #4]
+ 80007fc:	4a27      	ldr	r2, [pc, #156]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 80007fe:	f423 43ff 	bic.w	r3, r3, #32640	@ 0x7f80
+ 8000802:	f023 0340 	bic.w	r3, r3, #64	@ 0x40
+ 8000806:	6053      	str	r3, [r2, #4]
+    RCC->PLLCFGR |= (ClkConfig->PllN << RCC_PLLCFGR_PLLN_Pos);
+ 8000808:	4b24      	ldr	r3, [pc, #144]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 800080a:	685a      	ldr	r2, [r3, #4]
+ 800080c:	687b      	ldr	r3, [r7, #4]
+ 800080e:	8b5b      	ldrh	r3, [r3, #26]
+ 8000810:	019b      	lsls	r3, r3, #6
+ 8000812:	4922      	ldr	r1, [pc, #136]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 8000814:	4313      	orrs	r3, r2
+ 8000816:	604b      	str	r3, [r1, #4]
+    /*Configure PLLP*/
+    RCC->PLLCFGR &= ~RCC_PLLCFGR_PLLP;
+ 8000818:	4b20      	ldr	r3, [pc, #128]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 800081a:	685b      	ldr	r3, [r3, #4]
+ 800081c:	4a1f      	ldr	r2, [pc, #124]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 800081e:	f423 3340 	bic.w	r3, r3, #196608	@ 0x30000
+ 8000822:	6053      	str	r3, [r2, #4]
+    uint8 Pllp = Mcu_lConvertPllpDivtoBitValue(ClkConfig->PllP);
+ 8000824:	687b      	ldr	r3, [r7, #4]
+ 8000826:	7f1b      	ldrb	r3, [r3, #28]
+ 8000828:	4618      	mov	r0, r3
+ 800082a:	f7ff ff63 	bl	80006f4 <Mcu_lConvertPllpDivtoBitValue>
+ 800082e:	4603      	mov	r3, r0
+ 8000830:	73fb      	strb	r3, [r7, #15]
+    RCC->PLLCFGR |= (Pllp << RCC_PLLCFGR_PLLP_Pos);
+ 8000832:	4b1a      	ldr	r3, [pc, #104]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 8000834:	685a      	ldr	r2, [r3, #4]
+ 8000836:	7bfb      	ldrb	r3, [r7, #15]
+ 8000838:	041b      	lsls	r3, r3, #16
+ 800083a:	4918      	ldr	r1, [pc, #96]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 800083c:	4313      	orrs	r3, r2
+ 800083e:	604b      	str	r3, [r1, #4]
+
+    /*APB high-speed prescaler (APB2)*/
+    RCC->CFGR &= ~RCC_CFGR_PPRE2;
+ 8000840:	4b16      	ldr	r3, [pc, #88]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 8000842:	689b      	ldr	r3, [r3, #8]
+ 8000844:	4a15      	ldr	r2, [pc, #84]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 8000846:	f423 4360 	bic.w	r3, r3, #57344	@ 0xe000
+ 800084a:	6093      	str	r3, [r2, #8]
+    RCC->CFGR |= (ClkConfig->Apb2Prescaler << RCC_CFGR_PPRE2_Pos);
+ 800084c:	4b13      	ldr	r3, [pc, #76]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 800084e:	689a      	ldr	r2, [r3, #8]
+ 8000850:	687b      	ldr	r3, [r7, #4]
+ 8000852:	695b      	ldr	r3, [r3, #20]
+ 8000854:	035b      	lsls	r3, r3, #13
+ 8000856:	4911      	ldr	r1, [pc, #68]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 8000858:	4313      	orrs	r3, r2
+ 800085a:	608b      	str	r3, [r1, #8]
+    /* APB Low speed prescaler (APB1)*/
+    RCC->CFGR &= ~ RCC_CFGR_PPRE1;
+ 800085c:	4b0f      	ldr	r3, [pc, #60]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 800085e:	689b      	ldr	r3, [r3, #8]
+ 8000860:	4a0e      	ldr	r2, [pc, #56]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 8000862:	f423 53e0 	bic.w	r3, r3, #7168	@ 0x1c00
+ 8000866:	6093      	str	r3, [r2, #8]
+    RCC->CFGR |= (ClkConfig->Apb1Prescaler << RCC_CFGR_PPRE1_Pos);
+ 8000868:	4b0c      	ldr	r3, [pc, #48]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 800086a:	689a      	ldr	r2, [r3, #8]
+ 800086c:	687b      	ldr	r3, [r7, #4]
+ 800086e:	691b      	ldr	r3, [r3, #16]
+ 8000870:	029b      	lsls	r3, r3, #10
+ 8000872:	490a      	ldr	r1, [pc, #40]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 8000874:	4313      	orrs	r3, r2
+ 8000876:	608b      	str	r3, [r1, #8]
+    /*AHB prescaler*/
+    RCC->CFGR &= ~RCC_CFGR_HPRE;
+ 8000878:	4b08      	ldr	r3, [pc, #32]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 800087a:	689b      	ldr	r3, [r3, #8]
+ 800087c:	4a07      	ldr	r2, [pc, #28]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 800087e:	f023 03f0 	bic.w	r3, r3, #240	@ 0xf0
+ 8000882:	6093      	str	r3, [r2, #8]
+    RCC->CFGR |= (ClkConfig->AhbPrescaler << RCC_CFGR_HPRE_Pos);
+ 8000884:	4b05      	ldr	r3, [pc, #20]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 8000886:	689a      	ldr	r2, [r3, #8]
+ 8000888:	687b      	ldr	r3, [r7, #4]
+ 800088a:	68db      	ldr	r3, [r3, #12]
+ 800088c:	011b      	lsls	r3, r3, #4
+ 800088e:	4903      	ldr	r1, [pc, #12]	@ (800089c <Mcu_lConfigurePll+0xe4>)
+ 8000890:	4313      	orrs	r3, r2
+ 8000892:	608b      	str	r3, [r1, #8]
+}
+ 8000894:	bf00      	nop
+ 8000896:	3710      	adds	r7, #16
+ 8000898:	46bd      	mov	sp, r7
+ 800089a:	bd80      	pop	{r7, pc}
+ 800089c:	40023800 	.word	0x40023800
+
+080008a0 <Mcu_lEnablePll>:
+
+/**
+ * @brief: Enbale PLL and wait PLL lock -> RCC_CR_PLLRDY is set
+ */
+static inline void Mcu_lEnablePll(void)
+{
+ 80008a0:	b480      	push	{r7}
+ 80008a2:	af00      	add	r7, sp, #0
+    RCC->CR |= RCC_CR_PLLON;
+ 80008a4:	4b09      	ldr	r3, [pc, #36]	@ (80008cc <Mcu_lEnablePll+0x2c>)
+ 80008a6:	681b      	ldr	r3, [r3, #0]
+ 80008a8:	4a08      	ldr	r2, [pc, #32]	@ (80008cc <Mcu_lEnablePll+0x2c>)
+ 80008aa:	f043 7380 	orr.w	r3, r3, #16777216	@ 0x1000000
+ 80008ae:	6013      	str	r3, [r2, #0]
+    while(!(RCC->CR & RCC_CR_PLLRDY))
+ 80008b0:	bf00      	nop
+ 80008b2:	4b06      	ldr	r3, [pc, #24]	@ (80008cc <Mcu_lEnablePll+0x2c>)
+ 80008b4:	681b      	ldr	r3, [r3, #0]
+ 80008b6:	f003 7300 	and.w	r3, r3, #33554432	@ 0x2000000
+ 80008ba:	2b00      	cmp	r3, #0
+ 80008bc:	d0f9      	beq.n	80008b2 <Mcu_lEnablePll+0x12>
+    {
+        //wait to PLL ready
+    }
+}
+ 80008be:	bf00      	nop
+ 80008c0:	bf00      	nop
+ 80008c2:	46bd      	mov	sp, r7
+ 80008c4:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80008c8:	4770      	bx	lr
+ 80008ca:	bf00      	nop
+ 80008cc:	40023800 	.word	0x40023800
+
+080008d0 <Mcu_lDisablePll>:
+
+/**
+* @brief: Disabe PLL in to prepare configuration
+*/
+static inline void Mcu_lDisablePll(void)
+{
+ 80008d0:	b480      	push	{r7}
+ 80008d2:	af00      	add	r7, sp, #0
+    RCC->CR &= ~RCC_CR_PLLON;
+ 80008d4:	4b09      	ldr	r3, [pc, #36]	@ (80008fc <Mcu_lDisablePll+0x2c>)
+ 80008d6:	681b      	ldr	r3, [r3, #0]
+ 80008d8:	4a08      	ldr	r2, [pc, #32]	@ (80008fc <Mcu_lDisablePll+0x2c>)
+ 80008da:	f023 7380 	bic.w	r3, r3, #16777216	@ 0x1000000
+ 80008de:	6013      	str	r3, [r2, #0]
+
+    while((RCC->CR & RCC_CR_PLLRDY) != 0U)
+ 80008e0:	bf00      	nop
+ 80008e2:	4b06      	ldr	r3, [pc, #24]	@ (80008fc <Mcu_lDisablePll+0x2c>)
+ 80008e4:	681b      	ldr	r3, [r3, #0]
+ 80008e6:	f003 7300 	and.w	r3, r3, #33554432	@ 0x2000000
+ 80008ea:	2b00      	cmp	r3, #0
+ 80008ec:	d1f9      	bne.n	80008e2 <Mcu_lDisablePll+0x12>
+    {
+        /* Wait PLL unlock */
+    }
+}
+ 80008ee:	bf00      	nop
+ 80008f0:	bf00      	nop
+ 80008f2:	46bd      	mov	sp, r7
+ 80008f4:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80008f8:	4770      	bx	lr
+ 80008fa:	bf00      	nop
+ 80008fc:	40023800 	.word	0x40023800
+
+08000900 <Mcu_lEnablePeripheralClock>:
+ * @brief : function enable clock peripheral such as : UART,I2C,SPI,CAN (no GPIO)
+ * This function is called in the Mcu_initClock or Mcu_DistributePll
+ */
+
+static void Mcu_lEnablePeripheralClock(void)
+{
+ 8000900:	b480      	push	{r7}
+ 8000902:	af00      	add	r7, sp, #0
+    RCC_ENABLE_CAN1_CLK();
+ 8000904:	4b05      	ldr	r3, [pc, #20]	@ (800091c <Mcu_lEnablePeripheralClock+0x1c>)
+ 8000906:	6c1b      	ldr	r3, [r3, #64]	@ 0x40
+ 8000908:	4a04      	ldr	r2, [pc, #16]	@ (800091c <Mcu_lEnablePeripheralClock+0x1c>)
+ 800090a:	f043 7300 	orr.w	r3, r3, #33554432	@ 0x2000000
+ 800090e:	6413      	str	r3, [r2, #64]	@ 0x40
+}
+ 8000910:	bf00      	nop
+ 8000912:	46bd      	mov	sp, r7
+ 8000914:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000918:	4770      	bx	lr
+ 800091a:	bf00      	nop
+ 800091c:	40023800 	.word	0x40023800
+
+08000920 <Mcu_Init>:
+ * Initializes the MCU driver.
+ * @param ConfigPtr Pointer to the configuration structure.
+ * @brief Mcu_Init is only store configuration and set status
+ */
+void Mcu_Init(const Mcu_ConfigType* ConfigPtr)
+{
+ 8000920:	b480      	push	{r7}
+ 8000922:	b083      	sub	sp, #12
+ 8000924:	af00      	add	r7, sp, #0
+ 8000926:	6078      	str	r0, [r7, #4]
+    if(ConfigPtr == NULL_PTR)
+ 8000928:	687b      	ldr	r3, [r7, #4]
+ 800092a:	2b00      	cmp	r3, #0
+ 800092c:	d006      	beq.n	800093c <Mcu_Init+0x1c>
+    {
+        // Handle error: Invalid configuration pointer
+        return;
+    }
+
+    Mcu_ConfigPtr = ConfigPtr;
+ 800092e:	4a06      	ldr	r2, [pc, #24]	@ (8000948 <Mcu_Init+0x28>)
+ 8000930:	687b      	ldr	r3, [r7, #4]
+ 8000932:	6013      	str	r3, [r2, #0]
+    Mcu_Status = MCU_INIT;
+ 8000934:	4b05      	ldr	r3, [pc, #20]	@ (800094c <Mcu_Init+0x2c>)
+ 8000936:	2201      	movs	r2, #1
+ 8000938:	701a      	strb	r2, [r3, #0]
+ 800093a:	e000      	b.n	800093e <Mcu_Init+0x1e>
+        return;
+ 800093c:	bf00      	nop
+}
+ 800093e:	370c      	adds	r7, #12
+ 8000940:	46bd      	mov	sp, r7
+ 8000942:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000946:	4770      	bx	lr
+ 8000948:	20000054 	.word	0x20000054
+ 800094c:	20000058 	.word	0x20000058
+
+08000950 <Mcu_InitClock>:
+ * Initializes the system clock based on the specified clock setting.
+ * @param ClockSetting ID of the clock setting to be applied.
+ * @return Std_ReturnType Standard return type.
+ */
+Std_ReturnType Mcu_InitClock(Mcu_ClockType ClockSetting)
+{
+ 8000950:	b580      	push	{r7, lr}
+ 8000952:	b084      	sub	sp, #16
+ 8000954:	af00      	add	r7, sp, #0
+ 8000956:	4603      	mov	r3, r0
+ 8000958:	71fb      	strb	r3, [r7, #7]
+    if(Mcu_Status == MCU_UNINIT)
+ 800095a:	4b23      	ldr	r3, [pc, #140]	@ (80009e8 <Mcu_InitClock+0x98>)
+ 800095c:	781b      	ldrb	r3, [r3, #0]
+ 800095e:	2b00      	cmp	r3, #0
+ 8000960:	d101      	bne.n	8000966 <Mcu_InitClock+0x16>
+    {
+        return E_NOT_OK;
+ 8000962:	2301      	movs	r3, #1
+ 8000964:	e03c      	b.n	80009e0 <Mcu_InitClock+0x90>
+    }
+
+    
+    /*Check ClockSetting is validatable*/
+    if(ClockSetting >= Mcu_ConfigPtr->NumberOfClockConfigs)
+ 8000966:	4b21      	ldr	r3, [pc, #132]	@ (80009ec <Mcu_InitClock+0x9c>)
+ 8000968:	681b      	ldr	r3, [r3, #0]
+ 800096a:	791b      	ldrb	r3, [r3, #4]
+ 800096c:	79fa      	ldrb	r2, [r7, #7]
+ 800096e:	429a      	cmp	r2, r3
+ 8000970:	d301      	bcc.n	8000976 <Mcu_InitClock+0x26>
+    {
+        return E_NOT_OK;
+ 8000972:	2301      	movs	r3, #1
+ 8000974:	e034      	b.n	80009e0 <Mcu_InitClock+0x90>
+    }
+    //assign ClockSetting to Mcu_CLock_Id
+    Mcu_Clock_Id = ClockSetting;
+ 8000976:	4a1e      	ldr	r2, [pc, #120]	@ (80009f0 <Mcu_InitClock+0xa0>)
+ 8000978:	79fb      	ldrb	r3, [r7, #7]
+ 800097a:	7013      	strb	r3, [r2, #0]
+
+    /*Get clock configuration*/
+    const Mcu_ClockConfigType* ClockCfg = &(Mcu_ConfigPtr->ClockConfigs[ClockSetting]);
+ 800097c:	4b1b      	ldr	r3, [pc, #108]	@ (80009ec <Mcu_InitClock+0x9c>)
+ 800097e:	681b      	ldr	r3, [r3, #0]
+ 8000980:	681a      	ldr	r2, [r3, #0]
+ 8000982:	79fb      	ldrb	r3, [r7, #7]
+ 8000984:	015b      	lsls	r3, r3, #5
+ 8000986:	4413      	add	r3, r2
+ 8000988:	60fb      	str	r3, [r7, #12]
+
+    /*Set Flash Latency*/
+    FLASH->ACR &= ~(0xFU);
+ 800098a:	4b1a      	ldr	r3, [pc, #104]	@ (80009f4 <Mcu_InitClock+0xa4>)
+ 800098c:	681b      	ldr	r3, [r3, #0]
+ 800098e:	4a19      	ldr	r2, [pc, #100]	@ (80009f4 <Mcu_InitClock+0xa4>)
+ 8000990:	f023 030f 	bic.w	r3, r3, #15
+ 8000994:	6013      	str	r3, [r2, #0]
+    FLASH->ACR |= ClockCfg->FlashLatency;
+ 8000996:	4b17      	ldr	r3, [pc, #92]	@ (80009f4 <Mcu_InitClock+0xa4>)
+ 8000998:	681b      	ldr	r3, [r3, #0]
+ 800099a:	68fa      	ldr	r2, [r7, #12]
+ 800099c:	7f92      	ldrb	r2, [r2, #30]
+ 800099e:	4611      	mov	r1, r2
+ 80009a0:	4a14      	ldr	r2, [pc, #80]	@ (80009f4 <Mcu_InitClock+0xa4>)
+ 80009a2:	430b      	orrs	r3, r1
+ 80009a4:	6013      	str	r3, [r2, #0]
+    
+    switch(ClockCfg->SystemClockSource)
+ 80009a6:	68fb      	ldr	r3, [r7, #12]
+ 80009a8:	7a1b      	ldrb	r3, [r3, #8]
+ 80009aa:	2b02      	cmp	r3, #2
+ 80009ac:	d00b      	beq.n	80009c6 <Mcu_InitClock+0x76>
+ 80009ae:	2b02      	cmp	r3, #2
+ 80009b0:	dc15      	bgt.n	80009de <Mcu_InitClock+0x8e>
+ 80009b2:	2b00      	cmp	r3, #0
+ 80009b4:	d005      	beq.n	80009c2 <Mcu_InitClock+0x72>
+ 80009b6:	2b01      	cmp	r3, #1
+ 80009b8:	d111      	bne.n	80009de <Mcu_InitClock+0x8e>
+    {
+        case MCU_CLOCK_SOURCE_HSE:
+            Mcu_lEnableHSE();
+ 80009ba:	f7ff fec5 	bl	8000748 <Mcu_lEnableHSE>
+            return E_OK;
+ 80009be:	2300      	movs	r3, #0
+ 80009c0:	e00e      	b.n	80009e0 <Mcu_InitClock+0x90>
+            break;
+
+        case MCU_CLOCK_SOURCE_HSI:
+            //default HSI on with 16Mhx OSC
+            return E_OK;
+ 80009c2:	2300      	movs	r3, #0
+ 80009c4:	e00c      	b.n	80009e0 <Mcu_InitClock+0x90>
+            break;
+
+        case MCU_CLOCK_SOURCE_PLL:
+            /*Disable PLL before configurating*/
+            Mcu_lDisablePll();
+ 80009c6:	f7ff ff83 	bl	80008d0 <Mcu_lDisablePll>
+            /*Select PLL source*/
+            Mcu_lSelectPllSource(ClockCfg);
+ 80009ca:	68f8      	ldr	r0, [r7, #12]
+ 80009cc:	f7ff fed4 	bl	8000778 <Mcu_lSelectPllSource>
+            /*Configure PLL*/
+            Mcu_lConfigurePll(ClockCfg);
+ 80009d0:	68f8      	ldr	r0, [r7, #12]
+ 80009d2:	f7ff fef1 	bl	80007b8 <Mcu_lConfigurePll>
+            /*Enable PLL*/
+            Mcu_lEnablePll();
+ 80009d6:	f7ff ff63 	bl	80008a0 <Mcu_lEnablePll>
+
+            return E_OK;
+ 80009da:	2300      	movs	r3, #0
+ 80009dc:	e000      	b.n	80009e0 <Mcu_InitClock+0x90>
+            break;
+
+        default:
+            return E_NOT_OK;
+ 80009de:	2301      	movs	r3, #1
+            break;
+    }
+}
+ 80009e0:	4618      	mov	r0, r3
+ 80009e2:	3710      	adds	r7, #16
+ 80009e4:	46bd      	mov	sp, r7
+ 80009e6:	bd80      	pop	{r7, pc}
+ 80009e8:	20000058 	.word	0x20000058
+ 80009ec:	20000054 	.word	0x20000054
+ 80009f0:	20000059 	.word	0x20000059
+ 80009f4:	40023c00 	.word	0x40023c00
+
+080009f8 <Mcu_GetPllStatus>:
+/**
+ * Gets the current PLL lock status.
+ * @return Mcu_PllStatusType Current PLL lock status.
+ */
+Mcu_PllStatusType Mcu_GetPllStatus(void)
+{
+ 80009f8:	b480      	push	{r7}
+ 80009fa:	af00      	add	r7, sp, #0
+    if(Mcu_Status == MCU_UNINIT)
+ 80009fc:	4b09      	ldr	r3, [pc, #36]	@ (8000a24 <Mcu_GetPllStatus+0x2c>)
+ 80009fe:	781b      	ldrb	r3, [r3, #0]
+ 8000a00:	2b00      	cmp	r3, #0
+ 8000a02:	d101      	bne.n	8000a08 <Mcu_GetPllStatus+0x10>
+    {
+        return MCU_PLL_STATUS_UNDEFINED;
+ 8000a04:	2302      	movs	r3, #2
+ 8000a06:	e008      	b.n	8000a1a <Mcu_GetPllStatus+0x22>
+    }
+    
+    if((RCC->CR & RCC_CR_PLLRDY) != 0U)
+ 8000a08:	4b07      	ldr	r3, [pc, #28]	@ (8000a28 <Mcu_GetPllStatus+0x30>)
+ 8000a0a:	681b      	ldr	r3, [r3, #0]
+ 8000a0c:	f003 7300 	and.w	r3, r3, #33554432	@ 0x2000000
+ 8000a10:	2b00      	cmp	r3, #0
+ 8000a12:	d001      	beq.n	8000a18 <Mcu_GetPllStatus+0x20>
+    {
+        return MCU_PLL_LOCKED;
+ 8000a14:	2300      	movs	r3, #0
+ 8000a16:	e000      	b.n	8000a1a <Mcu_GetPllStatus+0x22>
+    }
+
+    return MCU_PLL_UNLOCKED;
+ 8000a18:	2301      	movs	r3, #1
+}
+ 8000a1a:	4618      	mov	r0, r3
+ 8000a1c:	46bd      	mov	sp, r7
+ 8000a1e:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000a22:	4770      	bx	lr
+ 8000a24:	20000058 	.word	0x20000058
+ 8000a28:	40023800 	.word	0x40023800
+
+08000a2c <Mcu_DistributePllClock>:
+/**
+ * Distributes the PLL clock.
+ * @return Std_ReturnType Standard return type.
+ */
+Std_ReturnType Mcu_DistributePllClock(void)
+{
+ 8000a2c:	b580      	push	{r7, lr}
+ 8000a2e:	af00      	add	r7, sp, #0
+    /*check init*/
+    if(Mcu_Status == MCU_UNINIT)
+ 8000a30:	4b1d      	ldr	r3, [pc, #116]	@ (8000aa8 <Mcu_DistributePllClock+0x7c>)
+ 8000a32:	781b      	ldrb	r3, [r3, #0]
+ 8000a34:	2b00      	cmp	r3, #0
+ 8000a36:	d101      	bne.n	8000a3c <Mcu_DistributePllClock+0x10>
+    {
+        return E_NOT_OK;
+ 8000a38:	2301      	movs	r3, #1
+ 8000a3a:	e033      	b.n	8000aa4 <Mcu_DistributePllClock+0x78>
+    }   
+
+    /*Enable clock peripheral*/
+    Mcu_lEnablePeripheralClock();
+ 8000a3c:	f7ff ff60 	bl	8000900 <Mcu_lEnablePeripheralClock>
+    
+    /*Distribute clock*/
+    switch(Mcu_ConfigPtr->ClockConfigs[Mcu_Clock_Id].SystemClockSource)
+ 8000a40:	4b1a      	ldr	r3, [pc, #104]	@ (8000aac <Mcu_DistributePllClock+0x80>)
+ 8000a42:	681b      	ldr	r3, [r3, #0]
+ 8000a44:	681a      	ldr	r2, [r3, #0]
+ 8000a46:	4b1a      	ldr	r3, [pc, #104]	@ (8000ab0 <Mcu_DistributePllClock+0x84>)
+ 8000a48:	781b      	ldrb	r3, [r3, #0]
+ 8000a4a:	015b      	lsls	r3, r3, #5
+ 8000a4c:	4413      	add	r3, r2
+ 8000a4e:	7a1b      	ldrb	r3, [r3, #8]
+ 8000a50:	2b02      	cmp	r3, #2
+ 8000a52:	d008      	beq.n	8000a66 <Mcu_DistributePllClock+0x3a>
+ 8000a54:	2b02      	cmp	r3, #2
+ 8000a56:	dc22      	bgt.n	8000a9e <Mcu_DistributePllClock+0x72>
+ 8000a58:	2b00      	cmp	r3, #0
+ 8000a5a:	d002      	beq.n	8000a62 <Mcu_DistributePllClock+0x36>
+ 8000a5c:	2b01      	cmp	r3, #1
+ 8000a5e:	d11e      	bne.n	8000a9e <Mcu_DistributePllClock+0x72>
+    {
+        case MCU_CLOCK_SOURCE_HSE:
+            break;
+ 8000a60:	e01f      	b.n	8000aa2 <Mcu_DistributePllClock+0x76>
+        case MCU_CLOCK_SOURCE_HSI:
+            //already distributed by RCC_CR_HSEON or RCC_CR_HSION
+            return E_OK;
+ 8000a62:	2300      	movs	r3, #0
+ 8000a64:	e01e      	b.n	8000aa4 <Mcu_DistributePllClock+0x78>
+            break;
+
+        case MCU_CLOCK_SOURCE_PLL:
+            /*Check PLL lock*/
+            if(Mcu_GetPllStatus() != MCU_PLL_LOCKED)
+ 8000a66:	f7ff ffc7 	bl	80009f8 <Mcu_GetPllStatus>
+ 8000a6a:	4603      	mov	r3, r0
+ 8000a6c:	2b00      	cmp	r3, #0
+ 8000a6e:	d001      	beq.n	8000a74 <Mcu_DistributePllClock+0x48>
+            {
+                return E_NOT_OK;
+ 8000a70:	2301      	movs	r3, #1
+ 8000a72:	e017      	b.n	8000aa4 <Mcu_DistributePllClock+0x78>
+            }
+            //implement with sysclk = pll
+            RCC->CFGR &= ~RCC_CFGR_SW;
+ 8000a74:	4b0f      	ldr	r3, [pc, #60]	@ (8000ab4 <Mcu_DistributePllClock+0x88>)
+ 8000a76:	689b      	ldr	r3, [r3, #8]
+ 8000a78:	4a0e      	ldr	r2, [pc, #56]	@ (8000ab4 <Mcu_DistributePllClock+0x88>)
+ 8000a7a:	f023 0303 	bic.w	r3, r3, #3
+ 8000a7e:	6093      	str	r3, [r2, #8]
+            RCC->CFGR |= RCC_CFGR_SW_PLL;
+ 8000a80:	4b0c      	ldr	r3, [pc, #48]	@ (8000ab4 <Mcu_DistributePllClock+0x88>)
+ 8000a82:	689b      	ldr	r3, [r3, #8]
+ 8000a84:	4a0b      	ldr	r2, [pc, #44]	@ (8000ab4 <Mcu_DistributePllClock+0x88>)
+ 8000a86:	f043 0302 	orr.w	r3, r3, #2
+ 8000a8a:	6093      	str	r3, [r2, #8]
+            //wait sysclk switch
+            while((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL)
+ 8000a8c:	bf00      	nop
+ 8000a8e:	4b09      	ldr	r3, [pc, #36]	@ (8000ab4 <Mcu_DistributePllClock+0x88>)
+ 8000a90:	689b      	ldr	r3, [r3, #8]
+ 8000a92:	f003 030c 	and.w	r3, r3, #12
+ 8000a96:	2b08      	cmp	r3, #8
+ 8000a98:	d1f9      	bne.n	8000a8e <Mcu_DistributePllClock+0x62>
+            {
+
+            }
+            return E_OK;
+ 8000a9a:	2300      	movs	r3, #0
+ 8000a9c:	e002      	b.n	8000aa4 <Mcu_DistributePllClock+0x78>
+            break;
+
+        default:
+            return E_NOT_OK;
+ 8000a9e:	2301      	movs	r3, #1
+ 8000aa0:	e000      	b.n	8000aa4 <Mcu_DistributePllClock+0x78>
+            break;
+    }
+    return E_NOT_OK;
+ 8000aa2:	2301      	movs	r3, #1
+}
+ 8000aa4:	4618      	mov	r0, r3
+ 8000aa6:	bd80      	pop	{r7, pc}
+ 8000aa8:	20000058 	.word	0x20000058
+ 8000aac:	20000054 	.word	0x20000054
+ 8000ab0:	20000059 	.word	0x20000059
+ 8000ab4:	40023800 	.word	0x40023800
+
+08000ab8 <Mcu_lGetAhbDivider>:
+ * AHB prescaler can be configured to divide system clock by 1, 2, 4, 8, 16, 64, 128, 256 or 512
+ * APB1 prescaler can be configured to divide AHB clock by 1, 2, 4, 8 or 16
+ * APB2 prescaler can be configured to divide AHB clock by 1, 2, 4, 8 or 16
+ */
+static uint32 Mcu_lGetAhbDivider(uint32 Hpre)
+{
+ 8000ab8:	b480      	push	{r7}
+ 8000aba:	b083      	sub	sp, #12
+ 8000abc:	af00      	add	r7, sp, #0
+ 8000abe:	6078      	str	r0, [r7, #4]
+    switch(Hpre)
+ 8000ac0:	687b      	ldr	r3, [r7, #4]
+ 8000ac2:	2bf0      	cmp	r3, #240	@ 0xf0
+ 8000ac4:	d03e      	beq.n	8000b44 <Mcu_lGetAhbDivider+0x8c>
+ 8000ac6:	687b      	ldr	r3, [r7, #4]
+ 8000ac8:	2bf0      	cmp	r3, #240	@ 0xf0
+ 8000aca:	d83e      	bhi.n	8000b4a <Mcu_lGetAhbDivider+0x92>
+ 8000acc:	687b      	ldr	r3, [r7, #4]
+ 8000ace:	2be0      	cmp	r3, #224	@ 0xe0
+ 8000ad0:	d035      	beq.n	8000b3e <Mcu_lGetAhbDivider+0x86>
+ 8000ad2:	687b      	ldr	r3, [r7, #4]
+ 8000ad4:	2be0      	cmp	r3, #224	@ 0xe0
+ 8000ad6:	d838      	bhi.n	8000b4a <Mcu_lGetAhbDivider+0x92>
+ 8000ad8:	687b      	ldr	r3, [r7, #4]
+ 8000ada:	2bd0      	cmp	r3, #208	@ 0xd0
+ 8000adc:	d02d      	beq.n	8000b3a <Mcu_lGetAhbDivider+0x82>
+ 8000ade:	687b      	ldr	r3, [r7, #4]
+ 8000ae0:	2bd0      	cmp	r3, #208	@ 0xd0
+ 8000ae2:	d832      	bhi.n	8000b4a <Mcu_lGetAhbDivider+0x92>
+ 8000ae4:	687b      	ldr	r3, [r7, #4]
+ 8000ae6:	2bc0      	cmp	r3, #192	@ 0xc0
+ 8000ae8:	d025      	beq.n	8000b36 <Mcu_lGetAhbDivider+0x7e>
+ 8000aea:	687b      	ldr	r3, [r7, #4]
+ 8000aec:	2bc0      	cmp	r3, #192	@ 0xc0
+ 8000aee:	d82c      	bhi.n	8000b4a <Mcu_lGetAhbDivider+0x92>
+ 8000af0:	687b      	ldr	r3, [r7, #4]
+ 8000af2:	2bb0      	cmp	r3, #176	@ 0xb0
+ 8000af4:	d01d      	beq.n	8000b32 <Mcu_lGetAhbDivider+0x7a>
+ 8000af6:	687b      	ldr	r3, [r7, #4]
+ 8000af8:	2bb0      	cmp	r3, #176	@ 0xb0
+ 8000afa:	d826      	bhi.n	8000b4a <Mcu_lGetAhbDivider+0x92>
+ 8000afc:	687b      	ldr	r3, [r7, #4]
+ 8000afe:	2ba0      	cmp	r3, #160	@ 0xa0
+ 8000b00:	d015      	beq.n	8000b2e <Mcu_lGetAhbDivider+0x76>
+ 8000b02:	687b      	ldr	r3, [r7, #4]
+ 8000b04:	2ba0      	cmp	r3, #160	@ 0xa0
+ 8000b06:	d820      	bhi.n	8000b4a <Mcu_lGetAhbDivider+0x92>
+ 8000b08:	687b      	ldr	r3, [r7, #4]
+ 8000b0a:	2b90      	cmp	r3, #144	@ 0x90
+ 8000b0c:	d00d      	beq.n	8000b2a <Mcu_lGetAhbDivider+0x72>
+ 8000b0e:	687b      	ldr	r3, [r7, #4]
+ 8000b10:	2b90      	cmp	r3, #144	@ 0x90
+ 8000b12:	d81a      	bhi.n	8000b4a <Mcu_lGetAhbDivider+0x92>
+ 8000b14:	687b      	ldr	r3, [r7, #4]
+ 8000b16:	2b00      	cmp	r3, #0
+ 8000b18:	d003      	beq.n	8000b22 <Mcu_lGetAhbDivider+0x6a>
+ 8000b1a:	687b      	ldr	r3, [r7, #4]
+ 8000b1c:	2b80      	cmp	r3, #128	@ 0x80
+ 8000b1e:	d002      	beq.n	8000b26 <Mcu_lGetAhbDivider+0x6e>
+ 8000b20:	e013      	b.n	8000b4a <Mcu_lGetAhbDivider+0x92>
+    {
+        case RCC_CFGR_HPRE_DIV1:
+            return 1U;
+ 8000b22:	2301      	movs	r3, #1
+ 8000b24:	e012      	b.n	8000b4c <Mcu_lGetAhbDivider+0x94>
+
+        case RCC_CFGR_HPRE_DIV2:
+            return 2U;
+ 8000b26:	2302      	movs	r3, #2
+ 8000b28:	e010      	b.n	8000b4c <Mcu_lGetAhbDivider+0x94>
+
+        case RCC_CFGR_HPRE_DIV4:
+            return 4U;
+ 8000b2a:	2304      	movs	r3, #4
+ 8000b2c:	e00e      	b.n	8000b4c <Mcu_lGetAhbDivider+0x94>
+
+        case RCC_CFGR_HPRE_DIV8:
+            return 8U;
+ 8000b2e:	2308      	movs	r3, #8
+ 8000b30:	e00c      	b.n	8000b4c <Mcu_lGetAhbDivider+0x94>
+
+        case RCC_CFGR_HPRE_DIV16:
+            return 16U;
+ 8000b32:	2310      	movs	r3, #16
+ 8000b34:	e00a      	b.n	8000b4c <Mcu_lGetAhbDivider+0x94>
+
+        case RCC_CFGR_HPRE_DIV64:
+            return 64U;
+ 8000b36:	2340      	movs	r3, #64	@ 0x40
+ 8000b38:	e008      	b.n	8000b4c <Mcu_lGetAhbDivider+0x94>
+
+        case RCC_CFGR_HPRE_DIV128:
+            return 128U;
+ 8000b3a:	2380      	movs	r3, #128	@ 0x80
+ 8000b3c:	e006      	b.n	8000b4c <Mcu_lGetAhbDivider+0x94>
+
+        case RCC_CFGR_HPRE_DIV256:
+            return 256U;
+ 8000b3e:	f44f 7380 	mov.w	r3, #256	@ 0x100
+ 8000b42:	e003      	b.n	8000b4c <Mcu_lGetAhbDivider+0x94>
+
+        case RCC_CFGR_HPRE_DIV512:
+            return 512U;
+ 8000b44:	f44f 7300 	mov.w	r3, #512	@ 0x200
+ 8000b48:	e000      	b.n	8000b4c <Mcu_lGetAhbDivider+0x94>
+
+        default:
+            return 1U;
+ 8000b4a:	2301      	movs	r3, #1
+    }
+}
+ 8000b4c:	4618      	mov	r0, r3
+ 8000b4e:	370c      	adds	r7, #12
+ 8000b50:	46bd      	mov	sp, r7
+ 8000b52:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000b56:	4770      	bx	lr
+
+08000b58 <Mcu_GetSysClkFreq>:
+/**
+ * @brief Gets the system clock frequency.
+ * @return uint32 The system clock frequency in Hz.
+ */
+uint32 Mcu_GetSysClkFreq(void)
+{
+ 8000b58:	b480      	push	{r7}
+ 8000b5a:	b085      	sub	sp, #20
+ 8000b5c:	af00      	add	r7, sp, #0
+    const Mcu_ClockConfigType* ClockCfg;
+    uint32 VcoIn;
+    uint32 VcoOut;
+
+    if(Mcu_ConfigPtr == NULL_PTR)
+ 8000b5e:	4b23      	ldr	r3, [pc, #140]	@ (8000bec <Mcu_GetSysClkFreq+0x94>)
+ 8000b60:	681b      	ldr	r3, [r3, #0]
+ 8000b62:	2b00      	cmp	r3, #0
+ 8000b64:	d101      	bne.n	8000b6a <Mcu_GetSysClkFreq+0x12>
+    {
+        return 0U;
+ 8000b66:	2300      	movs	r3, #0
+ 8000b68:	e039      	b.n	8000bde <Mcu_GetSysClkFreq+0x86>
+    }
+
+    ClockCfg = &Mcu_ConfigPtr->ClockConfigs[Mcu_Clock_Id];
+ 8000b6a:	4b20      	ldr	r3, [pc, #128]	@ (8000bec <Mcu_GetSysClkFreq+0x94>)
+ 8000b6c:	681b      	ldr	r3, [r3, #0]
+ 8000b6e:	681a      	ldr	r2, [r3, #0]
+ 8000b70:	4b1f      	ldr	r3, [pc, #124]	@ (8000bf0 <Mcu_GetSysClkFreq+0x98>)
+ 8000b72:	781b      	ldrb	r3, [r3, #0]
+ 8000b74:	015b      	lsls	r3, r3, #5
+ 8000b76:	4413      	add	r3, r2
+ 8000b78:	60bb      	str	r3, [r7, #8]
+
+    switch(ClockCfg->SystemClockSource)
+ 8000b7a:	68bb      	ldr	r3, [r7, #8]
+ 8000b7c:	7a1b      	ldrb	r3, [r3, #8]
+ 8000b7e:	2b02      	cmp	r3, #2
+ 8000b80:	d00b      	beq.n	8000b9a <Mcu_GetSysClkFreq+0x42>
+ 8000b82:	2b02      	cmp	r3, #2
+ 8000b84:	dc2a      	bgt.n	8000bdc <Mcu_GetSysClkFreq+0x84>
+ 8000b86:	2b00      	cmp	r3, #0
+ 8000b88:	d002      	beq.n	8000b90 <Mcu_GetSysClkFreq+0x38>
+ 8000b8a:	2b01      	cmp	r3, #1
+ 8000b8c:	d002      	beq.n	8000b94 <Mcu_GetSysClkFreq+0x3c>
+ 8000b8e:	e025      	b.n	8000bdc <Mcu_GetSysClkFreq+0x84>
+    {
+        case MCU_CLOCK_SOURCE_HSI:
+            return 16000000UL;
+ 8000b90:	4b18      	ldr	r3, [pc, #96]	@ (8000bf4 <Mcu_GetSysClkFreq+0x9c>)
+ 8000b92:	e024      	b.n	8000bde <Mcu_GetSysClkFreq+0x86>
+
+        case MCU_CLOCK_SOURCE_HSE:
+            return ClockCfg->HseFrequency;
+ 8000b94:	68bb      	ldr	r3, [r7, #8]
+ 8000b96:	681b      	ldr	r3, [r3, #0]
+ 8000b98:	e021      	b.n	8000bde <Mcu_GetSysClkFreq+0x86>
+
+        case MCU_CLOCK_SOURCE_PLL:
+
+            if(ClockCfg->PllSource == MCU_PLL_SOURCE_HSE)
+ 8000b9a:	68bb      	ldr	r3, [r7, #8]
+ 8000b9c:	7a5b      	ldrb	r3, [r3, #9]
+ 8000b9e:	2b01      	cmp	r3, #1
+ 8000ba0:	d107      	bne.n	8000bb2 <Mcu_GetSysClkFreq+0x5a>
+            {
+                VcoIn = ClockCfg->HseFrequency / ClockCfg->PllM;
+ 8000ba2:	68bb      	ldr	r3, [r7, #8]
+ 8000ba4:	681b      	ldr	r3, [r3, #0]
+ 8000ba6:	68ba      	ldr	r2, [r7, #8]
+ 8000ba8:	7e12      	ldrb	r2, [r2, #24]
+ 8000baa:	fbb3 f3f2 	udiv	r3, r3, r2
+ 8000bae:	60fb      	str	r3, [r7, #12]
+ 8000bb0:	e006      	b.n	8000bc0 <Mcu_GetSysClkFreq+0x68>
+            }
+            else
+            {
+                VcoIn = 16000000UL / ClockCfg->PllM;
+ 8000bb2:	68bb      	ldr	r3, [r7, #8]
+ 8000bb4:	7e1b      	ldrb	r3, [r3, #24]
+ 8000bb6:	461a      	mov	r2, r3
+ 8000bb8:	4b0e      	ldr	r3, [pc, #56]	@ (8000bf4 <Mcu_GetSysClkFreq+0x9c>)
+ 8000bba:	fbb3 f3f2 	udiv	r3, r3, r2
+ 8000bbe:	60fb      	str	r3, [r7, #12]
+            }
+
+            VcoOut = VcoIn * ClockCfg->PllN;
+ 8000bc0:	68bb      	ldr	r3, [r7, #8]
+ 8000bc2:	8b5b      	ldrh	r3, [r3, #26]
+ 8000bc4:	461a      	mov	r2, r3
+ 8000bc6:	68fb      	ldr	r3, [r7, #12]
+ 8000bc8:	fb02 f303 	mul.w	r3, r2, r3
+ 8000bcc:	607b      	str	r3, [r7, #4]
+
+            return (VcoOut / ClockCfg->PllP);
+ 8000bce:	68bb      	ldr	r3, [r7, #8]
+ 8000bd0:	7f1b      	ldrb	r3, [r3, #28]
+ 8000bd2:	461a      	mov	r2, r3
+ 8000bd4:	687b      	ldr	r3, [r7, #4]
+ 8000bd6:	fbb3 f3f2 	udiv	r3, r3, r2
+ 8000bda:	e000      	b.n	8000bde <Mcu_GetSysClkFreq+0x86>
+
+        default:
+            return 0U;
+ 8000bdc:	2300      	movs	r3, #0
+    }
+}
+ 8000bde:	4618      	mov	r0, r3
+ 8000be0:	3714      	adds	r7, #20
+ 8000be2:	46bd      	mov	sp, r7
+ 8000be4:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000be8:	4770      	bx	lr
+ 8000bea:	bf00      	nop
+ 8000bec:	20000054 	.word	0x20000054
+ 8000bf0:	20000059 	.word	0x20000059
+ 8000bf4:	00f42400 	.word	0x00f42400
+
+08000bf8 <Mcu_GetHclkFreq>:
+/**
+ * @brief Gets the AHB clock frequency.
+ * @return uint32 The AHB clock frequency in Hz.
+ */
+uint32 Mcu_GetHclkFreq(void)
+{
+ 8000bf8:	b590      	push	{r4, r7, lr}
+ 8000bfa:	b083      	sub	sp, #12
+ 8000bfc:	af00      	add	r7, sp, #0
+    const Mcu_ClockConfigType* ClockCfg;
+
+    if(Mcu_ConfigPtr == NULL_PTR)
+ 8000bfe:	4b0e      	ldr	r3, [pc, #56]	@ (8000c38 <Mcu_GetHclkFreq+0x40>)
+ 8000c00:	681b      	ldr	r3, [r3, #0]
+ 8000c02:	2b00      	cmp	r3, #0
+ 8000c04:	d101      	bne.n	8000c0a <Mcu_GetHclkFreq+0x12>
+    {
+        return 0U;
+ 8000c06:	2300      	movs	r3, #0
+ 8000c08:	e012      	b.n	8000c30 <Mcu_GetHclkFreq+0x38>
+    }
+
+    ClockCfg = &Mcu_ConfigPtr->ClockConfigs[Mcu_Clock_Id];
+ 8000c0a:	4b0b      	ldr	r3, [pc, #44]	@ (8000c38 <Mcu_GetHclkFreq+0x40>)
+ 8000c0c:	681b      	ldr	r3, [r3, #0]
+ 8000c0e:	681a      	ldr	r2, [r3, #0]
+ 8000c10:	4b0a      	ldr	r3, [pc, #40]	@ (8000c3c <Mcu_GetHclkFreq+0x44>)
+ 8000c12:	781b      	ldrb	r3, [r3, #0]
+ 8000c14:	015b      	lsls	r3, r3, #5
+ 8000c16:	4413      	add	r3, r2
+ 8000c18:	607b      	str	r3, [r7, #4]
+
+    return (Mcu_GetSysClkFreq() /
+ 8000c1a:	f7ff ff9d 	bl	8000b58 <Mcu_GetSysClkFreq>
+ 8000c1e:	4604      	mov	r4, r0
+            Mcu_lGetAhbDivider(ClockCfg->AhbPrescaler));
+ 8000c20:	687b      	ldr	r3, [r7, #4]
+ 8000c22:	68db      	ldr	r3, [r3, #12]
+ 8000c24:	4618      	mov	r0, r3
+ 8000c26:	f7ff ff47 	bl	8000ab8 <Mcu_lGetAhbDivider>
+ 8000c2a:	4603      	mov	r3, r0
+    return (Mcu_GetSysClkFreq() /
+ 8000c2c:	fbb4 f3f3 	udiv	r3, r4, r3
+}
+ 8000c30:	4618      	mov	r0, r3
+ 8000c32:	370c      	adds	r7, #12
+ 8000c34:	46bd      	mov	sp, r7
+ 8000c36:	bd90      	pop	{r4, r7, pc}
+ 8000c38:	20000054 	.word	0x20000054
+ 8000c3c:	20000059 	.word	0x20000059
+
+08000c40 <Port_lConfigureMode>:
+/**
+ * @brief: Configure pin direction according to configuration parameter in pointer Port_ConfigPtr
+ * @param: PinConfigs: pointer to Port_ConfigType structure which contains pin configuration parameters
+ */
+static inline void Port_lConfigureMode(const Port_PinConfigsType* PinConfigs)
+{
+ 8000c40:	b480      	push	{r7}
+ 8000c42:	b085      	sub	sp, #20
+ 8000c44:	af00      	add	r7, sp, #0
+ 8000c46:	6078      	str	r0, [r7, #4]
+    uint8 Position = PinConfigs->PinId & 0xFU; /* Get the pin position within the port (0-15) */
+ 8000c48:	687b      	ldr	r3, [r7, #4]
+ 8000c4a:	881b      	ldrh	r3, [r3, #0]
+ 8000c4c:	b2db      	uxtb	r3, r3
+ 8000c4e:	f003 030f 	and.w	r3, r3, #15
+ 8000c52:	73fb      	strb	r3, [r7, #15]
+    /* Clear the 2 bits for the pin and set the new mode */
+    Port_GpioTable[PinConfigs->PinId >> 4U]->MODER &= ~(PIN_MASK_2BIT << (Position*2U));
+ 8000c54:	687b      	ldr	r3, [r7, #4]
+ 8000c56:	881b      	ldrh	r3, [r3, #0]
+ 8000c58:	091b      	lsrs	r3, r3, #4
+ 8000c5a:	b29b      	uxth	r3, r3
+ 8000c5c:	461a      	mov	r2, r3
+ 8000c5e:	4b1a      	ldr	r3, [pc, #104]	@ (8000cc8 <Port_lConfigureMode+0x88>)
+ 8000c60:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000c64:	6819      	ldr	r1, [r3, #0]
+ 8000c66:	7bfb      	ldrb	r3, [r7, #15]
+ 8000c68:	005b      	lsls	r3, r3, #1
+ 8000c6a:	2203      	movs	r2, #3
+ 8000c6c:	fa02 f303 	lsl.w	r3, r2, r3
+ 8000c70:	43da      	mvns	r2, r3
+ 8000c72:	687b      	ldr	r3, [r7, #4]
+ 8000c74:	881b      	ldrh	r3, [r3, #0]
+ 8000c76:	091b      	lsrs	r3, r3, #4
+ 8000c78:	b29b      	uxth	r3, r3
+ 8000c7a:	4618      	mov	r0, r3
+ 8000c7c:	4b12      	ldr	r3, [pc, #72]	@ (8000cc8 <Port_lConfigureMode+0x88>)
+ 8000c7e:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000c82:	400a      	ands	r2, r1
+ 8000c84:	601a      	str	r2, [r3, #0]
+    Port_GpioTable[PinConfigs->PinId >> 4U]->MODER |= (PinConfigs->PinMode << (2U*Position));
+ 8000c86:	687b      	ldr	r3, [r7, #4]
+ 8000c88:	881b      	ldrh	r3, [r3, #0]
+ 8000c8a:	091b      	lsrs	r3, r3, #4
+ 8000c8c:	b29b      	uxth	r3, r3
+ 8000c8e:	461a      	mov	r2, r3
+ 8000c90:	4b0d      	ldr	r3, [pc, #52]	@ (8000cc8 <Port_lConfigureMode+0x88>)
+ 8000c92:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000c96:	681a      	ldr	r2, [r3, #0]
+ 8000c98:	687b      	ldr	r3, [r7, #4]
+ 8000c9a:	79db      	ldrb	r3, [r3, #7]
+ 8000c9c:	4619      	mov	r1, r3
+ 8000c9e:	7bfb      	ldrb	r3, [r7, #15]
+ 8000ca0:	005b      	lsls	r3, r3, #1
+ 8000ca2:	fa01 f303 	lsl.w	r3, r1, r3
+ 8000ca6:	4619      	mov	r1, r3
+ 8000ca8:	687b      	ldr	r3, [r7, #4]
+ 8000caa:	881b      	ldrh	r3, [r3, #0]
+ 8000cac:	091b      	lsrs	r3, r3, #4
+ 8000cae:	b29b      	uxth	r3, r3
+ 8000cb0:	4618      	mov	r0, r3
+ 8000cb2:	4b05      	ldr	r3, [pc, #20]	@ (8000cc8 <Port_lConfigureMode+0x88>)
+ 8000cb4:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000cb8:	430a      	orrs	r2, r1
+ 8000cba:	601a      	str	r2, [r3, #0]
+}
+ 8000cbc:	bf00      	nop
+ 8000cbe:	3714      	adds	r7, #20
+ 8000cc0:	46bd      	mov	sp, r7
+ 8000cc2:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000cc6:	4770      	bx	lr
+ 8000cc8:	0800141c 	.word	0x0800141c
+
+08000ccc <Port_lConfigureOutputType>:
+/**
+ * @brief: Configure pin output type according to configuration parameter in pointer Port_ConfigPtr
+ * @param: PinConfigs: pointer to Port_ConfigType structure which contains pin configuration parameters
+ */
+static inline void Port_lConfigureOutputType(const Port_PinConfigsType* PinConfigs)
+{
+ 8000ccc:	b480      	push	{r7}
+ 8000cce:	b085      	sub	sp, #20
+ 8000cd0:	af00      	add	r7, sp, #0
+ 8000cd2:	6078      	str	r0, [r7, #4]
+    uint8 Position = PinConfigs->PinId & 0xFU; /* Get the pin position within the port (0-15) */
+ 8000cd4:	687b      	ldr	r3, [r7, #4]
+ 8000cd6:	881b      	ldrh	r3, [r3, #0]
+ 8000cd8:	b2db      	uxtb	r3, r3
+ 8000cda:	f003 030f 	and.w	r3, r3, #15
+ 8000cde:	73fb      	strb	r3, [r7, #15]
+    Port_GpioTable[PinConfigs->PinId >> 4U]->OTYPER &= ~(PIN_MASK_1BIT << Position);
+ 8000ce0:	687b      	ldr	r3, [r7, #4]
+ 8000ce2:	881b      	ldrh	r3, [r3, #0]
+ 8000ce4:	091b      	lsrs	r3, r3, #4
+ 8000ce6:	b29b      	uxth	r3, r3
+ 8000ce8:	461a      	mov	r2, r3
+ 8000cea:	4b19      	ldr	r3, [pc, #100]	@ (8000d50 <Port_lConfigureOutputType+0x84>)
+ 8000cec:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000cf0:	6859      	ldr	r1, [r3, #4]
+ 8000cf2:	7bfb      	ldrb	r3, [r7, #15]
+ 8000cf4:	2201      	movs	r2, #1
+ 8000cf6:	fa02 f303 	lsl.w	r3, r2, r3
+ 8000cfa:	43da      	mvns	r2, r3
+ 8000cfc:	687b      	ldr	r3, [r7, #4]
+ 8000cfe:	881b      	ldrh	r3, [r3, #0]
+ 8000d00:	091b      	lsrs	r3, r3, #4
+ 8000d02:	b29b      	uxth	r3, r3
+ 8000d04:	4618      	mov	r0, r3
+ 8000d06:	4b12      	ldr	r3, [pc, #72]	@ (8000d50 <Port_lConfigureOutputType+0x84>)
+ 8000d08:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000d0c:	400a      	ands	r2, r1
+ 8000d0e:	605a      	str	r2, [r3, #4]
+    Port_GpioTable[PinConfigs->PinId >> 4U]->OTYPER |= (PinConfigs->OutputType << Position);
+ 8000d10:	687b      	ldr	r3, [r7, #4]
+ 8000d12:	881b      	ldrh	r3, [r3, #0]
+ 8000d14:	091b      	lsrs	r3, r3, #4
+ 8000d16:	b29b      	uxth	r3, r3
+ 8000d18:	461a      	mov	r2, r3
+ 8000d1a:	4b0d      	ldr	r3, [pc, #52]	@ (8000d50 <Port_lConfigureOutputType+0x84>)
+ 8000d1c:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000d20:	685a      	ldr	r2, [r3, #4]
+ 8000d22:	687b      	ldr	r3, [r7, #4]
+ 8000d24:	78db      	ldrb	r3, [r3, #3]
+ 8000d26:	4619      	mov	r1, r3
+ 8000d28:	7bfb      	ldrb	r3, [r7, #15]
+ 8000d2a:	fa01 f303 	lsl.w	r3, r1, r3
+ 8000d2e:	4619      	mov	r1, r3
+ 8000d30:	687b      	ldr	r3, [r7, #4]
+ 8000d32:	881b      	ldrh	r3, [r3, #0]
+ 8000d34:	091b      	lsrs	r3, r3, #4
+ 8000d36:	b29b      	uxth	r3, r3
+ 8000d38:	4618      	mov	r0, r3
+ 8000d3a:	4b05      	ldr	r3, [pc, #20]	@ (8000d50 <Port_lConfigureOutputType+0x84>)
+ 8000d3c:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000d40:	430a      	orrs	r2, r1
+ 8000d42:	605a      	str	r2, [r3, #4]
+}
+ 8000d44:	bf00      	nop
+ 8000d46:	3714      	adds	r7, #20
+ 8000d48:	46bd      	mov	sp, r7
+ 8000d4a:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000d4e:	4770      	bx	lr
+ 8000d50:	0800141c 	.word	0x0800141c
+
+08000d54 <Port_lConfigureOutputSpeed>:
+/**
+ * @brief: Configure pin output speed according to configuration parameter in pointer Port_ConfigPtr
+ * @param: PinConfigs: pointer to Port_ConfigType structure which contains pin configuration parameters
+ */
+static inline void Port_lConfigureOutputSpeed(const Port_PinConfigsType* PinConfigs)
+{
+ 8000d54:	b480      	push	{r7}
+ 8000d56:	b085      	sub	sp, #20
+ 8000d58:	af00      	add	r7, sp, #0
+ 8000d5a:	6078      	str	r0, [r7, #4]
+    uint8 Position = PinConfigs->PinId & 0xFU; /* Get the pin position within the port (0-15) */
+ 8000d5c:	687b      	ldr	r3, [r7, #4]
+ 8000d5e:	881b      	ldrh	r3, [r3, #0]
+ 8000d60:	b2db      	uxtb	r3, r3
+ 8000d62:	f003 030f 	and.w	r3, r3, #15
+ 8000d66:	73fb      	strb	r3, [r7, #15]
+    Port_GpioTable[PinConfigs->PinId >> 4U]->OSPEEDR &= ~(PIN_MASK_2BIT << (Position*2U));
+ 8000d68:	687b      	ldr	r3, [r7, #4]
+ 8000d6a:	881b      	ldrh	r3, [r3, #0]
+ 8000d6c:	091b      	lsrs	r3, r3, #4
+ 8000d6e:	b29b      	uxth	r3, r3
+ 8000d70:	461a      	mov	r2, r3
+ 8000d72:	4b1a      	ldr	r3, [pc, #104]	@ (8000ddc <Port_lConfigureOutputSpeed+0x88>)
+ 8000d74:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000d78:	6899      	ldr	r1, [r3, #8]
+ 8000d7a:	7bfb      	ldrb	r3, [r7, #15]
+ 8000d7c:	005b      	lsls	r3, r3, #1
+ 8000d7e:	2203      	movs	r2, #3
+ 8000d80:	fa02 f303 	lsl.w	r3, r2, r3
+ 8000d84:	43da      	mvns	r2, r3
+ 8000d86:	687b      	ldr	r3, [r7, #4]
+ 8000d88:	881b      	ldrh	r3, [r3, #0]
+ 8000d8a:	091b      	lsrs	r3, r3, #4
+ 8000d8c:	b29b      	uxth	r3, r3
+ 8000d8e:	4618      	mov	r0, r3
+ 8000d90:	4b12      	ldr	r3, [pc, #72]	@ (8000ddc <Port_lConfigureOutputSpeed+0x88>)
+ 8000d92:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000d96:	400a      	ands	r2, r1
+ 8000d98:	609a      	str	r2, [r3, #8]
+    Port_GpioTable[PinConfigs->PinId >> 4U]->OSPEEDR |= (PinConfigs->OutputSpeed << (2U*Position));
+ 8000d9a:	687b      	ldr	r3, [r7, #4]
+ 8000d9c:	881b      	ldrh	r3, [r3, #0]
+ 8000d9e:	091b      	lsrs	r3, r3, #4
+ 8000da0:	b29b      	uxth	r3, r3
+ 8000da2:	461a      	mov	r2, r3
+ 8000da4:	4b0d      	ldr	r3, [pc, #52]	@ (8000ddc <Port_lConfigureOutputSpeed+0x88>)
+ 8000da6:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000daa:	689a      	ldr	r2, [r3, #8]
+ 8000dac:	687b      	ldr	r3, [r7, #4]
+ 8000dae:	791b      	ldrb	r3, [r3, #4]
+ 8000db0:	4619      	mov	r1, r3
+ 8000db2:	7bfb      	ldrb	r3, [r7, #15]
+ 8000db4:	005b      	lsls	r3, r3, #1
+ 8000db6:	fa01 f303 	lsl.w	r3, r1, r3
+ 8000dba:	4619      	mov	r1, r3
+ 8000dbc:	687b      	ldr	r3, [r7, #4]
+ 8000dbe:	881b      	ldrh	r3, [r3, #0]
+ 8000dc0:	091b      	lsrs	r3, r3, #4
+ 8000dc2:	b29b      	uxth	r3, r3
+ 8000dc4:	4618      	mov	r0, r3
+ 8000dc6:	4b05      	ldr	r3, [pc, #20]	@ (8000ddc <Port_lConfigureOutputSpeed+0x88>)
+ 8000dc8:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000dcc:	430a      	orrs	r2, r1
+ 8000dce:	609a      	str	r2, [r3, #8]
+}
+ 8000dd0:	bf00      	nop
+ 8000dd2:	3714      	adds	r7, #20
+ 8000dd4:	46bd      	mov	sp, r7
+ 8000dd6:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000dda:	4770      	bx	lr
+ 8000ddc:	0800141c 	.word	0x0800141c
+
+08000de0 <Port_lConfigurePullupPullDown>:
+/**
+ * @brief: Configure pin pull-up/pull-down according to configuration parameter in pointer Port_ConfigPtr
+ * @param: PinConfigs: pointer to Port_ConfigType structure which contains pin configuration parameters
+ */
+static inline void Port_lConfigurePullupPullDown(const Port_PinConfigsType* PinConfigs)
+{
+ 8000de0:	b480      	push	{r7}
+ 8000de2:	b085      	sub	sp, #20
+ 8000de4:	af00      	add	r7, sp, #0
+ 8000de6:	6078      	str	r0, [r7, #4]
+    uint8 Position = PinConfigs->PinId & 0xFU; /* Get the pin position within the port (0-15) */
+ 8000de8:	687b      	ldr	r3, [r7, #4]
+ 8000dea:	881b      	ldrh	r3, [r3, #0]
+ 8000dec:	b2db      	uxtb	r3, r3
+ 8000dee:	f003 030f 	and.w	r3, r3, #15
+ 8000df2:	73fb      	strb	r3, [r7, #15]
+    Port_GpioTable[PinConfigs->PinId >> 4U]->PUPDR &= ~(PIN_MASK_2BIT << (Position*2U));
+ 8000df4:	687b      	ldr	r3, [r7, #4]
+ 8000df6:	881b      	ldrh	r3, [r3, #0]
+ 8000df8:	091b      	lsrs	r3, r3, #4
+ 8000dfa:	b29b      	uxth	r3, r3
+ 8000dfc:	461a      	mov	r2, r3
+ 8000dfe:	4b1a      	ldr	r3, [pc, #104]	@ (8000e68 <Port_lConfigurePullupPullDown+0x88>)
+ 8000e00:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000e04:	68d9      	ldr	r1, [r3, #12]
+ 8000e06:	7bfb      	ldrb	r3, [r7, #15]
+ 8000e08:	005b      	lsls	r3, r3, #1
+ 8000e0a:	2203      	movs	r2, #3
+ 8000e0c:	fa02 f303 	lsl.w	r3, r2, r3
+ 8000e10:	43da      	mvns	r2, r3
+ 8000e12:	687b      	ldr	r3, [r7, #4]
+ 8000e14:	881b      	ldrh	r3, [r3, #0]
+ 8000e16:	091b      	lsrs	r3, r3, #4
+ 8000e18:	b29b      	uxth	r3, r3
+ 8000e1a:	4618      	mov	r0, r3
+ 8000e1c:	4b12      	ldr	r3, [pc, #72]	@ (8000e68 <Port_lConfigurePullupPullDown+0x88>)
+ 8000e1e:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000e22:	400a      	ands	r2, r1
+ 8000e24:	60da      	str	r2, [r3, #12]
+    Port_GpioTable[PinConfigs->PinId >> 4U]->PUPDR |= (PinConfigs->PullUpPullDown << (2U*Position));
+ 8000e26:	687b      	ldr	r3, [r7, #4]
+ 8000e28:	881b      	ldrh	r3, [r3, #0]
+ 8000e2a:	091b      	lsrs	r3, r3, #4
+ 8000e2c:	b29b      	uxth	r3, r3
+ 8000e2e:	461a      	mov	r2, r3
+ 8000e30:	4b0d      	ldr	r3, [pc, #52]	@ (8000e68 <Port_lConfigurePullupPullDown+0x88>)
+ 8000e32:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000e36:	68da      	ldr	r2, [r3, #12]
+ 8000e38:	687b      	ldr	r3, [r7, #4]
+ 8000e3a:	795b      	ldrb	r3, [r3, #5]
+ 8000e3c:	4619      	mov	r1, r3
+ 8000e3e:	7bfb      	ldrb	r3, [r7, #15]
+ 8000e40:	005b      	lsls	r3, r3, #1
+ 8000e42:	fa01 f303 	lsl.w	r3, r1, r3
+ 8000e46:	4619      	mov	r1, r3
+ 8000e48:	687b      	ldr	r3, [r7, #4]
+ 8000e4a:	881b      	ldrh	r3, [r3, #0]
+ 8000e4c:	091b      	lsrs	r3, r3, #4
+ 8000e4e:	b29b      	uxth	r3, r3
+ 8000e50:	4618      	mov	r0, r3
+ 8000e52:	4b05      	ldr	r3, [pc, #20]	@ (8000e68 <Port_lConfigurePullupPullDown+0x88>)
+ 8000e54:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000e58:	430a      	orrs	r2, r1
+ 8000e5a:	60da      	str	r2, [r3, #12]
+}
+ 8000e5c:	bf00      	nop
+ 8000e5e:	3714      	adds	r7, #20
+ 8000e60:	46bd      	mov	sp, r7
+ 8000e62:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000e66:	4770      	bx	lr
+ 8000e68:	0800141c 	.word	0x0800141c
+
+08000e6c <Port_ConfigurePinLevel>:
+ * @brief: Configure pin level according to configuration parameter in pointer Port_ConfigPtr
+ * @param: PinConfigs: pointer to Port_ConfigType structure which contains pin configuration parameters
+ * @param: Position: position of the pin in the port
+ */
+static inline void Port_ConfigurePinLevel(const Port_PinConfigsType* PinConfigs, uint8 Position)
+{
+ 8000e6c:	b480      	push	{r7}
+ 8000e6e:	b083      	sub	sp, #12
+ 8000e70:	af00      	add	r7, sp, #0
+ 8000e72:	6078      	str	r0, [r7, #4]
+ 8000e74:	460b      	mov	r3, r1
+ 8000e76:	70fb      	strb	r3, [r7, #3]
+    if(PinConfigs->InitialValue == STD_LOW)
+ 8000e78:	687b      	ldr	r3, [r7, #4]
+ 8000e7a:	799b      	ldrb	r3, [r3, #6]
+ 8000e7c:	2b00      	cmp	r3, #0
+ 8000e7e:	d118      	bne.n	8000eb2 <Port_ConfigurePinLevel+0x46>
+    {
+        Port_GpioTable[PinConfigs->PinId >> 4U]->ODR &= ~(PIN_MASK_1BIT << Position);
+ 8000e80:	687b      	ldr	r3, [r7, #4]
+ 8000e82:	881b      	ldrh	r3, [r3, #0]
+ 8000e84:	091b      	lsrs	r3, r3, #4
+ 8000e86:	b29b      	uxth	r3, r3
+ 8000e88:	461a      	mov	r2, r3
+ 8000e8a:	4b18      	ldr	r3, [pc, #96]	@ (8000eec <Port_ConfigurePinLevel+0x80>)
+ 8000e8c:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000e90:	6959      	ldr	r1, [r3, #20]
+ 8000e92:	78fb      	ldrb	r3, [r7, #3]
+ 8000e94:	2201      	movs	r2, #1
+ 8000e96:	fa02 f303 	lsl.w	r3, r2, r3
+ 8000e9a:	43da      	mvns	r2, r3
+ 8000e9c:	687b      	ldr	r3, [r7, #4]
+ 8000e9e:	881b      	ldrh	r3, [r3, #0]
+ 8000ea0:	091b      	lsrs	r3, r3, #4
+ 8000ea2:	b29b      	uxth	r3, r3
+ 8000ea4:	4618      	mov	r0, r3
+ 8000ea6:	4b11      	ldr	r3, [pc, #68]	@ (8000eec <Port_ConfigurePinLevel+0x80>)
+ 8000ea8:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000eac:	400a      	ands	r2, r1
+ 8000eae:	615a      	str	r2, [r3, #20]
+    }
+    else
+    {
+        Port_GpioTable[PinConfigs->PinId >> 4U]->ODR |= (PIN_MASK_1BIT << Position);
+    }
+}
+ 8000eb0:	e015      	b.n	8000ede <Port_ConfigurePinLevel+0x72>
+        Port_GpioTable[PinConfigs->PinId >> 4U]->ODR |= (PIN_MASK_1BIT << Position);
+ 8000eb2:	687b      	ldr	r3, [r7, #4]
+ 8000eb4:	881b      	ldrh	r3, [r3, #0]
+ 8000eb6:	091b      	lsrs	r3, r3, #4
+ 8000eb8:	b29b      	uxth	r3, r3
+ 8000eba:	461a      	mov	r2, r3
+ 8000ebc:	4b0b      	ldr	r3, [pc, #44]	@ (8000eec <Port_ConfigurePinLevel+0x80>)
+ 8000ebe:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000ec2:	6959      	ldr	r1, [r3, #20]
+ 8000ec4:	78fb      	ldrb	r3, [r7, #3]
+ 8000ec6:	2201      	movs	r2, #1
+ 8000ec8:	409a      	lsls	r2, r3
+ 8000eca:	687b      	ldr	r3, [r7, #4]
+ 8000ecc:	881b      	ldrh	r3, [r3, #0]
+ 8000ece:	091b      	lsrs	r3, r3, #4
+ 8000ed0:	b29b      	uxth	r3, r3
+ 8000ed2:	4618      	mov	r0, r3
+ 8000ed4:	4b05      	ldr	r3, [pc, #20]	@ (8000eec <Port_ConfigurePinLevel+0x80>)
+ 8000ed6:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000eda:	430a      	orrs	r2, r1
+ 8000edc:	615a      	str	r2, [r3, #20]
+}
+ 8000ede:	bf00      	nop
+ 8000ee0:	370c      	adds	r7, #12
+ 8000ee2:	46bd      	mov	sp, r7
+ 8000ee4:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000ee8:	4770      	bx	lr
+ 8000eea:	bf00      	nop
+ 8000eec:	0800141c 	.word	0x0800141c
+
+08000ef0 <Port_lConfigureAlternateFunction>:
+ * @brief: Configure pin alternate function according to configuration parameter in pointer Port_ConfigPtr
+ * @param: PinConfigs: pointer to Port_ConfigType structure which contains pin configuration parameters
+ * @param: Position: position of the pin in the port
+ */
+static inline void Port_lConfigureAlternateFunction(const Port_PinConfigsType* PinConfigs)
+{
+ 8000ef0:	b480      	push	{r7}
+ 8000ef2:	b085      	sub	sp, #20
+ 8000ef4:	af00      	add	r7, sp, #0
+ 8000ef6:	6078      	str	r0, [r7, #4]
+    uint8 Position = PinConfigs->PinId & 0xFU; /* Get the pin position within the port (0-15) */
+ 8000ef8:	687b      	ldr	r3, [r7, #4]
+ 8000efa:	881b      	ldrh	r3, [r3, #0]
+ 8000efc:	b2db      	uxtb	r3, r3
+ 8000efe:	f003 030f 	and.w	r3, r3, #15
+ 8000f02:	73fb      	strb	r3, [r7, #15]
+    if(Position < 8U)
+ 8000f04:	7bfb      	ldrb	r3, [r7, #15]
+ 8000f06:	2b07      	cmp	r3, #7
+ 8000f08:	d834      	bhi.n	8000f74 <Port_lConfigureAlternateFunction+0x84>
+    {
+        Port_GpioTable[PinConfigs->PinId >> 4U]->AFR[0] &= ~(0xFU << (Position*4U)); /* Clear the 4 bits for the pin */
+ 8000f0a:	687b      	ldr	r3, [r7, #4]
+ 8000f0c:	881b      	ldrh	r3, [r3, #0]
+ 8000f0e:	091b      	lsrs	r3, r3, #4
+ 8000f10:	b29b      	uxth	r3, r3
+ 8000f12:	461a      	mov	r2, r3
+ 8000f14:	4b36      	ldr	r3, [pc, #216]	@ (8000ff0 <Port_lConfigureAlternateFunction+0x100>)
+ 8000f16:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000f1a:	6a19      	ldr	r1, [r3, #32]
+ 8000f1c:	7bfb      	ldrb	r3, [r7, #15]
+ 8000f1e:	009b      	lsls	r3, r3, #2
+ 8000f20:	220f      	movs	r2, #15
+ 8000f22:	fa02 f303 	lsl.w	r3, r2, r3
+ 8000f26:	43da      	mvns	r2, r3
+ 8000f28:	687b      	ldr	r3, [r7, #4]
+ 8000f2a:	881b      	ldrh	r3, [r3, #0]
+ 8000f2c:	091b      	lsrs	r3, r3, #4
+ 8000f2e:	b29b      	uxth	r3, r3
+ 8000f30:	4618      	mov	r0, r3
+ 8000f32:	4b2f      	ldr	r3, [pc, #188]	@ (8000ff0 <Port_lConfigureAlternateFunction+0x100>)
+ 8000f34:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000f38:	400a      	ands	r2, r1
+ 8000f3a:	621a      	str	r2, [r3, #32]
+        Port_GpioTable[PinConfigs->PinId >> 4U]->AFR[0] |= (PinConfigs->AlternateFunction << (Position*4U)); /* Set the alternate function */
+ 8000f3c:	687b      	ldr	r3, [r7, #4]
+ 8000f3e:	881b      	ldrh	r3, [r3, #0]
+ 8000f40:	091b      	lsrs	r3, r3, #4
+ 8000f42:	b29b      	uxth	r3, r3
+ 8000f44:	461a      	mov	r2, r3
+ 8000f46:	4b2a      	ldr	r3, [pc, #168]	@ (8000ff0 <Port_lConfigureAlternateFunction+0x100>)
+ 8000f48:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000f4c:	6a1a      	ldr	r2, [r3, #32]
+ 8000f4e:	687b      	ldr	r3, [r7, #4]
+ 8000f50:	7a1b      	ldrb	r3, [r3, #8]
+ 8000f52:	4619      	mov	r1, r3
+ 8000f54:	7bfb      	ldrb	r3, [r7, #15]
+ 8000f56:	009b      	lsls	r3, r3, #2
+ 8000f58:	fa01 f303 	lsl.w	r3, r1, r3
+ 8000f5c:	4619      	mov	r1, r3
+ 8000f5e:	687b      	ldr	r3, [r7, #4]
+ 8000f60:	881b      	ldrh	r3, [r3, #0]
+ 8000f62:	091b      	lsrs	r3, r3, #4
+ 8000f64:	b29b      	uxth	r3, r3
+ 8000f66:	4618      	mov	r0, r3
+ 8000f68:	4b21      	ldr	r3, [pc, #132]	@ (8000ff0 <Port_lConfigureAlternateFunction+0x100>)
+ 8000f6a:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000f6e:	430a      	orrs	r2, r1
+ 8000f70:	621a      	str	r2, [r3, #32]
+        Position -= 8U;
+
+        Port_GpioTable[PinConfigs->PinId >> 4U]->AFR[1] &= ~(0xFU << (Position*4U)); /* Clear the 4 bits for the pin */
+        Port_GpioTable[PinConfigs->PinId >> 4U]->AFR[1] |= (PinConfigs->AlternateFunction << (Position*4U)); /* Set the alternate function */
+    }
+}
+ 8000f72:	e036      	b.n	8000fe2 <Port_lConfigureAlternateFunction+0xf2>
+        Position -= 8U;
+ 8000f74:	7bfb      	ldrb	r3, [r7, #15]
+ 8000f76:	3b08      	subs	r3, #8
+ 8000f78:	73fb      	strb	r3, [r7, #15]
+        Port_GpioTable[PinConfigs->PinId >> 4U]->AFR[1] &= ~(0xFU << (Position*4U)); /* Clear the 4 bits for the pin */
+ 8000f7a:	687b      	ldr	r3, [r7, #4]
+ 8000f7c:	881b      	ldrh	r3, [r3, #0]
+ 8000f7e:	091b      	lsrs	r3, r3, #4
+ 8000f80:	b29b      	uxth	r3, r3
+ 8000f82:	461a      	mov	r2, r3
+ 8000f84:	4b1a      	ldr	r3, [pc, #104]	@ (8000ff0 <Port_lConfigureAlternateFunction+0x100>)
+ 8000f86:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000f8a:	6a59      	ldr	r1, [r3, #36]	@ 0x24
+ 8000f8c:	7bfb      	ldrb	r3, [r7, #15]
+ 8000f8e:	009b      	lsls	r3, r3, #2
+ 8000f90:	220f      	movs	r2, #15
+ 8000f92:	fa02 f303 	lsl.w	r3, r2, r3
+ 8000f96:	43da      	mvns	r2, r3
+ 8000f98:	687b      	ldr	r3, [r7, #4]
+ 8000f9a:	881b      	ldrh	r3, [r3, #0]
+ 8000f9c:	091b      	lsrs	r3, r3, #4
+ 8000f9e:	b29b      	uxth	r3, r3
+ 8000fa0:	4618      	mov	r0, r3
+ 8000fa2:	4b13      	ldr	r3, [pc, #76]	@ (8000ff0 <Port_lConfigureAlternateFunction+0x100>)
+ 8000fa4:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000fa8:	400a      	ands	r2, r1
+ 8000faa:	625a      	str	r2, [r3, #36]	@ 0x24
+        Port_GpioTable[PinConfigs->PinId >> 4U]->AFR[1] |= (PinConfigs->AlternateFunction << (Position*4U)); /* Set the alternate function */
+ 8000fac:	687b      	ldr	r3, [r7, #4]
+ 8000fae:	881b      	ldrh	r3, [r3, #0]
+ 8000fb0:	091b      	lsrs	r3, r3, #4
+ 8000fb2:	b29b      	uxth	r3, r3
+ 8000fb4:	461a      	mov	r2, r3
+ 8000fb6:	4b0e      	ldr	r3, [pc, #56]	@ (8000ff0 <Port_lConfigureAlternateFunction+0x100>)
+ 8000fb8:	f853 3022 	ldr.w	r3, [r3, r2, lsl #2]
+ 8000fbc:	6a5a      	ldr	r2, [r3, #36]	@ 0x24
+ 8000fbe:	687b      	ldr	r3, [r7, #4]
+ 8000fc0:	7a1b      	ldrb	r3, [r3, #8]
+ 8000fc2:	4619      	mov	r1, r3
+ 8000fc4:	7bfb      	ldrb	r3, [r7, #15]
+ 8000fc6:	009b      	lsls	r3, r3, #2
+ 8000fc8:	fa01 f303 	lsl.w	r3, r1, r3
+ 8000fcc:	4619      	mov	r1, r3
+ 8000fce:	687b      	ldr	r3, [r7, #4]
+ 8000fd0:	881b      	ldrh	r3, [r3, #0]
+ 8000fd2:	091b      	lsrs	r3, r3, #4
+ 8000fd4:	b29b      	uxth	r3, r3
+ 8000fd6:	4618      	mov	r0, r3
+ 8000fd8:	4b05      	ldr	r3, [pc, #20]	@ (8000ff0 <Port_lConfigureAlternateFunction+0x100>)
+ 8000fda:	f853 3020 	ldr.w	r3, [r3, r0, lsl #2]
+ 8000fde:	430a      	orrs	r2, r1
+ 8000fe0:	625a      	str	r2, [r3, #36]	@ 0x24
+}
+ 8000fe2:	bf00      	nop
+ 8000fe4:	3714      	adds	r7, #20
+ 8000fe6:	46bd      	mov	sp, r7
+ 8000fe8:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 8000fec:	4770      	bx	lr
+ 8000fee:	bf00      	nop
+ 8000ff0:	0800141c 	.word	0x0800141c
+
+08000ff4 <Port_lEnableClock>:
+/**
+ * @brief: Enable clock for the corresponding GPIO port according to configuration parameter in pointer Port_ConfigPtr
+ * @param: PinConfigs: pointer to Port_ConfigType structure which contains pin configuration parameters
+ */
+static inline void Port_lEnableClock(const Port_PinConfigsType* PinConfig)
+{
+ 8000ff4:	b480      	push	{r7}
+ 8000ff6:	b083      	sub	sp, #12
+ 8000ff8:	af00      	add	r7, sp, #0
+ 8000ffa:	6078      	str	r0, [r7, #4]
+    switch(PinConfig->PinId >> 4U)
+ 8000ffc:	687b      	ldr	r3, [r7, #4]
+ 8000ffe:	881b      	ldrh	r3, [r3, #0]
+ 8001000:	091b      	lsrs	r3, r3, #4
+ 8001002:	b29b      	uxth	r3, r3
+ 8001004:	2b07      	cmp	r3, #7
+ 8001006:	d84b      	bhi.n	80010a0 <Port_lEnableClock+0xac>
+ 8001008:	a201      	add	r2, pc, #4	@ (adr r2, 8001010 <Port_lEnableClock+0x1c>)
+ 800100a:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
+ 800100e:	bf00      	nop
+ 8001010:	08001031 	.word	0x08001031
+ 8001014:	0800103f 	.word	0x0800103f
+ 8001018:	0800104d 	.word	0x0800104d
+ 800101c:	0800105b 	.word	0x0800105b
+ 8001020:	08001069 	.word	0x08001069
+ 8001024:	08001077 	.word	0x08001077
+ 8001028:	08001085 	.word	0x08001085
+ 800102c:	08001093 	.word	0x08001093
+    {
+        case 0U: /* GPIOA */
+            RCC_ENABLE_PORTA_CLK();
+ 8001030:	4b1f      	ldr	r3, [pc, #124]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 8001032:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8001034:	4a1e      	ldr	r2, [pc, #120]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 8001036:	f043 0301 	orr.w	r3, r3, #1
+ 800103a:	6313      	str	r3, [r2, #48]	@ 0x30
+            break;
+ 800103c:	e031      	b.n	80010a2 <Port_lEnableClock+0xae>
+        case 1U: /* GPIOB */
+            RCC_ENABLE_PORTB_CLK();
+ 800103e:	4b1c      	ldr	r3, [pc, #112]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 8001040:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8001042:	4a1b      	ldr	r2, [pc, #108]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 8001044:	f043 0302 	orr.w	r3, r3, #2
+ 8001048:	6313      	str	r3, [r2, #48]	@ 0x30
+            break;
+ 800104a:	e02a      	b.n	80010a2 <Port_lEnableClock+0xae>
+        case 2U: /* GPIOC */
+            RCC_ENABLE_PORTC_CLK();
+ 800104c:	4b18      	ldr	r3, [pc, #96]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 800104e:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8001050:	4a17      	ldr	r2, [pc, #92]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 8001052:	f043 0304 	orr.w	r3, r3, #4
+ 8001056:	6313      	str	r3, [r2, #48]	@ 0x30
+            break;
+ 8001058:	e023      	b.n	80010a2 <Port_lEnableClock+0xae>
+        case 3U: /* GPIOD */
+            RCC_ENABLE_PORTD_CLK();
+ 800105a:	4b15      	ldr	r3, [pc, #84]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 800105c:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 800105e:	4a14      	ldr	r2, [pc, #80]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 8001060:	f043 0308 	orr.w	r3, r3, #8
+ 8001064:	6313      	str	r3, [r2, #48]	@ 0x30
+            break;
+ 8001066:	e01c      	b.n	80010a2 <Port_lEnableClock+0xae>
+        case 4U: /* GPIOE */
+            RCC_ENABLE_PORTE_CLK();
+ 8001068:	4b11      	ldr	r3, [pc, #68]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 800106a:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 800106c:	4a10      	ldr	r2, [pc, #64]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 800106e:	f043 0310 	orr.w	r3, r3, #16
+ 8001072:	6313      	str	r3, [r2, #48]	@ 0x30
+            break;
+ 8001074:	e015      	b.n	80010a2 <Port_lEnableClock+0xae>
+        case 5U: /* GPIOF */
+            RCC_ENABLE_PORTF_CLK();
+ 8001076:	4b0e      	ldr	r3, [pc, #56]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 8001078:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 800107a:	4a0d      	ldr	r2, [pc, #52]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 800107c:	f043 0320 	orr.w	r3, r3, #32
+ 8001080:	6313      	str	r3, [r2, #48]	@ 0x30
+            break;
+ 8001082:	e00e      	b.n	80010a2 <Port_lEnableClock+0xae>
+        case 6U: /* GPIOG */
+            RCC_ENABLE_PORTG_CLK();
+ 8001084:	4b0a      	ldr	r3, [pc, #40]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 8001086:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8001088:	4a09      	ldr	r2, [pc, #36]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 800108a:	f043 0340 	orr.w	r3, r3, #64	@ 0x40
+ 800108e:	6313      	str	r3, [r2, #48]	@ 0x30
+            break;
+ 8001090:	e007      	b.n	80010a2 <Port_lEnableClock+0xae>
+        case 7U: /* GPIOH */
+            RCC_ENABLE_PORTH_CLK();
+ 8001092:	4b07      	ldr	r3, [pc, #28]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 8001094:	6b1b      	ldr	r3, [r3, #48]	@ 0x30
+ 8001096:	4a06      	ldr	r2, [pc, #24]	@ (80010b0 <Port_lEnableClock+0xbc>)
+ 8001098:	f043 0380 	orr.w	r3, r3, #128	@ 0x80
+ 800109c:	6313      	str	r3, [r2, #48]	@ 0x30
+            break;
+ 800109e:	e000      	b.n	80010a2 <Port_lEnableClock+0xae>
+        default:
+            /* Invalid port, do nothing or handle error */
+            break;
+ 80010a0:	bf00      	nop
+    }
+}
+ 80010a2:	bf00      	nop
+ 80010a4:	370c      	adds	r7, #12
+ 80010a6:	46bd      	mov	sp, r7
+ 80010a8:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80010ac:	4770      	bx	lr
+ 80010ae:	bf00      	nop
+ 80010b0:	40023800 	.word	0x40023800
+
+080010b4 <Port_Init>:
+/**
+ * @brief initializes the Port driver.
+ * @param ConfigPtr Pointer to the configuration structure.
+ */
+void Port_Init(const Port_ConfigType* ConfigPtr)
+{
+ 80010b4:	b580      	push	{r7, lr}
+ 80010b6:	b084      	sub	sp, #16
+ 80010b8:	af00      	add	r7, sp, #0
+ 80010ba:	6078      	str	r0, [r7, #4]
+    if(ConfigPtr == NULL_PTR)
+ 80010bc:	687b      	ldr	r3, [r7, #4]
+ 80010be:	2b00      	cmp	r3, #0
+ 80010c0:	d07a      	beq.n	80011b8 <Port_Init+0x104>
+    {
+        return;
+    }
+
+    //assign pointer which pointing port pin configuration structure
+    Port_ConfigPtr = ConfigPtr;
+ 80010c2:	4a3f      	ldr	r2, [pc, #252]	@ (80011c0 <Port_Init+0x10c>)
+ 80010c4:	687b      	ldr	r3, [r7, #4]
+ 80010c6:	6013      	str	r3, [r2, #0]
+
+    /*configure each pin*/
+    for (uint8 i = 0; i < Port_ConfigPtr->PinCount; i++)
+ 80010c8:	2300      	movs	r3, #0
+ 80010ca:	73fb      	strb	r3, [r7, #15]
+ 80010cc:	e06d      	b.n	80011aa <Port_Init+0xf6>
+    {
+        /*Enable clock for the corresponding GPIO port*/
+        Port_lEnableClock(&Port_ConfigPtr->PinConfigs[i]);
+ 80010ce:	4b3c      	ldr	r3, [pc, #240]	@ (80011c0 <Port_Init+0x10c>)
+ 80010d0:	681b      	ldr	r3, [r3, #0]
+ 80010d2:	6819      	ldr	r1, [r3, #0]
+ 80010d4:	7bfa      	ldrb	r2, [r7, #15]
+ 80010d6:	4613      	mov	r3, r2
+ 80010d8:	009b      	lsls	r3, r3, #2
+ 80010da:	4413      	add	r3, r2
+ 80010dc:	005b      	lsls	r3, r3, #1
+ 80010de:	440b      	add	r3, r1
+ 80010e0:	4618      	mov	r0, r3
+ 80010e2:	f7ff ff87 	bl	8000ff4 <Port_lEnableClock>
+
+        /*Direction: Input or output*/
+        Port_lConfigureMode(&Port_ConfigPtr->PinConfigs[i]);
+ 80010e6:	4b36      	ldr	r3, [pc, #216]	@ (80011c0 <Port_Init+0x10c>)
+ 80010e8:	681b      	ldr	r3, [r3, #0]
+ 80010ea:	6819      	ldr	r1, [r3, #0]
+ 80010ec:	7bfa      	ldrb	r2, [r7, #15]
+ 80010ee:	4613      	mov	r3, r2
+ 80010f0:	009b      	lsls	r3, r3, #2
+ 80010f2:	4413      	add	r3, r2
+ 80010f4:	005b      	lsls	r3, r3, #1
+ 80010f6:	440b      	add	r3, r1
+ 80010f8:	4618      	mov	r0, r3
+ 80010fa:	f7ff fda1 	bl	8000c40 <Port_lConfigureMode>
+        /*Pushpull or open drain*/
+        Port_lConfigureOutputType(&Port_ConfigPtr->PinConfigs[i]);
+ 80010fe:	4b30      	ldr	r3, [pc, #192]	@ (80011c0 <Port_Init+0x10c>)
+ 8001100:	681b      	ldr	r3, [r3, #0]
+ 8001102:	6819      	ldr	r1, [r3, #0]
+ 8001104:	7bfa      	ldrb	r2, [r7, #15]
+ 8001106:	4613      	mov	r3, r2
+ 8001108:	009b      	lsls	r3, r3, #2
+ 800110a:	4413      	add	r3, r2
+ 800110c:	005b      	lsls	r3, r3, #1
+ 800110e:	440b      	add	r3, r1
+ 8001110:	4618      	mov	r0, r3
+ 8001112:	f7ff fddb 	bl	8000ccc <Port_lConfigureOutputType>
+        /*Pullup or Pulldowmn register*/
+        Port_lConfigurePullupPullDown(&Port_ConfigPtr->PinConfigs[i]);
+ 8001116:	4b2a      	ldr	r3, [pc, #168]	@ (80011c0 <Port_Init+0x10c>)
+ 8001118:	681b      	ldr	r3, [r3, #0]
+ 800111a:	6819      	ldr	r1, [r3, #0]
+ 800111c:	7bfa      	ldrb	r2, [r7, #15]
+ 800111e:	4613      	mov	r3, r2
+ 8001120:	009b      	lsls	r3, r3, #2
+ 8001122:	4413      	add	r3, r2
+ 8001124:	005b      	lsls	r3, r3, #1
+ 8001126:	440b      	add	r3, r1
+ 8001128:	4618      	mov	r0, r3
+ 800112a:	f7ff fe59 	bl	8000de0 <Port_lConfigurePullupPullDown>
+        /*Output Speed*/
+        Port_lConfigureOutputSpeed(&Port_ConfigPtr->PinConfigs[i]);
+ 800112e:	4b24      	ldr	r3, [pc, #144]	@ (80011c0 <Port_Init+0x10c>)
+ 8001130:	681b      	ldr	r3, [r3, #0]
+ 8001132:	6819      	ldr	r1, [r3, #0]
+ 8001134:	7bfa      	ldrb	r2, [r7, #15]
+ 8001136:	4613      	mov	r3, r2
+ 8001138:	009b      	lsls	r3, r3, #2
+ 800113a:	4413      	add	r3, r2
+ 800113c:	005b      	lsls	r3, r3, #1
+ 800113e:	440b      	add	r3, r1
+ 8001140:	4618      	mov	r0, r3
+ 8001142:	f7ff fe07 	bl	8000d54 <Port_lConfigureOutputSpeed>
+        /*Initial Value*/
+        Port_ConfigurePinLevel(&Port_ConfigPtr->PinConfigs[i], Port_ConfigPtr->PinConfigs[i].PinId);
+ 8001146:	4b1e      	ldr	r3, [pc, #120]	@ (80011c0 <Port_Init+0x10c>)
+ 8001148:	681b      	ldr	r3, [r3, #0]
+ 800114a:	6819      	ldr	r1, [r3, #0]
+ 800114c:	7bfa      	ldrb	r2, [r7, #15]
+ 800114e:	4613      	mov	r3, r2
+ 8001150:	009b      	lsls	r3, r3, #2
+ 8001152:	4413      	add	r3, r2
+ 8001154:	005b      	lsls	r3, r3, #1
+ 8001156:	18c8      	adds	r0, r1, r3
+ 8001158:	4b19      	ldr	r3, [pc, #100]	@ (80011c0 <Port_Init+0x10c>)
+ 800115a:	681b      	ldr	r3, [r3, #0]
+ 800115c:	6819      	ldr	r1, [r3, #0]
+ 800115e:	7bfa      	ldrb	r2, [r7, #15]
+ 8001160:	4613      	mov	r3, r2
+ 8001162:	009b      	lsls	r3, r3, #2
+ 8001164:	4413      	add	r3, r2
+ 8001166:	005b      	lsls	r3, r3, #1
+ 8001168:	440b      	add	r3, r1
+ 800116a:	881b      	ldrh	r3, [r3, #0]
+ 800116c:	b2db      	uxtb	r3, r3
+ 800116e:	4619      	mov	r1, r3
+ 8001170:	f7ff fe7c 	bl	8000e6c <Port_ConfigurePinLevel>
+        /*Alternate Function*/
+        if (Port_ConfigPtr->PinConfigs[i].PinMode == PORT_PIN_MODE_AF)
+ 8001174:	4b12      	ldr	r3, [pc, #72]	@ (80011c0 <Port_Init+0x10c>)
+ 8001176:	681b      	ldr	r3, [r3, #0]
+ 8001178:	6819      	ldr	r1, [r3, #0]
+ 800117a:	7bfa      	ldrb	r2, [r7, #15]
+ 800117c:	4613      	mov	r3, r2
+ 800117e:	009b      	lsls	r3, r3, #2
+ 8001180:	4413      	add	r3, r2
+ 8001182:	005b      	lsls	r3, r3, #1
+ 8001184:	440b      	add	r3, r1
+ 8001186:	79db      	ldrb	r3, [r3, #7]
+ 8001188:	2b02      	cmp	r3, #2
+ 800118a:	d10b      	bne.n	80011a4 <Port_Init+0xf0>
+        {
+            Port_lConfigureAlternateFunction(&Port_ConfigPtr->PinConfigs[i]);
+ 800118c:	4b0c      	ldr	r3, [pc, #48]	@ (80011c0 <Port_Init+0x10c>)
+ 800118e:	681b      	ldr	r3, [r3, #0]
+ 8001190:	6819      	ldr	r1, [r3, #0]
+ 8001192:	7bfa      	ldrb	r2, [r7, #15]
+ 8001194:	4613      	mov	r3, r2
+ 8001196:	009b      	lsls	r3, r3, #2
+ 8001198:	4413      	add	r3, r2
+ 800119a:	005b      	lsls	r3, r3, #1
+ 800119c:	440b      	add	r3, r1
+ 800119e:	4618      	mov	r0, r3
+ 80011a0:	f7ff fea6 	bl	8000ef0 <Port_lConfigureAlternateFunction>
+    for (uint8 i = 0; i < Port_ConfigPtr->PinCount; i++)
+ 80011a4:	7bfb      	ldrb	r3, [r7, #15]
+ 80011a6:	3301      	adds	r3, #1
+ 80011a8:	73fb      	strb	r3, [r7, #15]
+ 80011aa:	4b05      	ldr	r3, [pc, #20]	@ (80011c0 <Port_Init+0x10c>)
+ 80011ac:	681b      	ldr	r3, [r3, #0]
+ 80011ae:	791b      	ldrb	r3, [r3, #4]
+ 80011b0:	7bfa      	ldrb	r2, [r7, #15]
+ 80011b2:	429a      	cmp	r2, r3
+ 80011b4:	d38b      	bcc.n	80010ce <Port_Init+0x1a>
+ 80011b6:	e000      	b.n	80011ba <Port_Init+0x106>
+        return;
+ 80011b8:	bf00      	nop
+        }
+    }
+ 80011ba:	3710      	adds	r7, #16
+ 80011bc:	46bd      	mov	sp, r7
+ 80011be:	bd80      	pop	{r7, pc}
+ 80011c0:	2000005c 	.word	0x2000005c
+
+080011c4 <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 80011c4:	480d      	ldr	r0, [pc, #52]	@ (80011fc <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 80011c6:	4685      	mov	sp, r0
+/* Call the clock system initialization function.*/
+  bl  SystemInit
+ 80011c8:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 80011cc:	480c      	ldr	r0, [pc, #48]	@ (8001200 <LoopForever+0x6>)
+  ldr r1, =_edata
+ 80011ce:	490d      	ldr	r1, [pc, #52]	@ (8001204 <LoopForever+0xa>)
+  ldr r2, =_sidata
+ 80011d0:	4a0d      	ldr	r2, [pc, #52]	@ (8001208 <LoopForever+0xe>)
+  movs r3, #0
+ 80011d2:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 80011d4:	e002      	b.n	80011dc <LoopCopyDataInit>
+
+080011d6 <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 80011d6:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 80011d8:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 80011da:	3304      	adds	r3, #4
+
+080011dc <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 80011dc:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 80011de:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 80011e0:	d3f9      	bcc.n	80011d6 <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 80011e2:	4a0a      	ldr	r2, [pc, #40]	@ (800120c <LoopForever+0x12>)
+  ldr r4, =_ebss
+ 80011e4:	4c0a      	ldr	r4, [pc, #40]	@ (8001210 <LoopForever+0x16>)
+  movs r3, #0
+ 80011e6:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 80011e8:	e001      	b.n	80011ee <LoopFillZerobss>
+
+080011ea <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 80011ea:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 80011ec:	3204      	adds	r2, #4
+
+080011ee <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 80011ee:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 80011f0:	d3fb      	bcc.n	80011ea <FillZerobss>
+
+/* Call static constructors */
+  bl __libc_init_array
+ 80011f2:	f000 f86f 	bl	80012d4 <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
+ 80011f6:	f7fe ffe7 	bl	80001c8 <main>
+
+080011fa <LoopForever>:
+
+LoopForever:
+  b LoopForever
+ 80011fa:	e7fe      	b.n	80011fa <LoopForever>
+  ldr   r0, =_estack
+ 80011fc:	20020000 	.word	0x20020000
+  ldr r0, =_sdata
+ 8001200:	20000000 	.word	0x20000000
+  ldr r1, =_edata
+ 8001204:	2000002c 	.word	0x2000002c
+  ldr r2, =_sidata
+ 8001208:	0800146c 	.word	0x0800146c
+  ldr r2, =_sbss
+ 800120c:	2000002c 	.word	0x2000002c
+  ldr r4, =_ebss
+ 8001210:	20000064 	.word	0x20000064
+
+08001214 <ADC_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 8001214:	e7fe      	b.n	8001214 <ADC_IRQHandler>
+	...
+
+08001218 <SYSTICK_Init>:
+
+static inline void SYSTICK_IncTick(void);
+
+
+void SYSTICK_Init(void)
+{
+ 8001218:	b580      	push	{r7, lr}
+ 800121a:	b082      	sub	sp, #8
+ 800121c:	af00      	add	r7, sp, #0
+    uint32 reload;
+
+    /* SysTick clock source = HCLK */
+    reload = (Mcu_GetHclkFreq() / 1000U);
+ 800121e:	f7ff fceb 	bl	8000bf8 <Mcu_GetHclkFreq>
+ 8001222:	4603      	mov	r3, r0
+ 8001224:	4a0e      	ldr	r2, [pc, #56]	@ (8001260 <SYSTICK_Init+0x48>)
+ 8001226:	fba2 2303 	umull	r2, r3, r2, r3
+ 800122a:	099b      	lsrs	r3, r3, #6
+ 800122c:	607b      	str	r3, [r7, #4]
+
+    if ((reload == 0U) || (reload > SYSTICK_MAX_RELOAD))
+ 800122e:	687b      	ldr	r3, [r7, #4]
+ 8001230:	2b00      	cmp	r3, #0
+ 8001232:	d011      	beq.n	8001258 <SYSTICK_Init+0x40>
+ 8001234:	687b      	ldr	r3, [r7, #4]
+ 8001236:	f1b3 7f80 	cmp.w	r3, #16777216	@ 0x1000000
+ 800123a:	d20d      	bcs.n	8001258 <SYSTICK_Init+0x40>
+    {
+        return;
+    }
+
+    /* Disable SysTick */
+    SYSTICK->CTRL = 0U;
+ 800123c:	4b09      	ldr	r3, [pc, #36]	@ (8001264 <SYSTICK_Init+0x4c>)
+ 800123e:	2200      	movs	r2, #0
+ 8001240:	601a      	str	r2, [r3, #0]
+
+    /* Set reload value for 1ms tick */
+    SYSTICK->LOAD = reload - 1U;
+ 8001242:	4a08      	ldr	r2, [pc, #32]	@ (8001264 <SYSTICK_Init+0x4c>)
+ 8001244:	687b      	ldr	r3, [r7, #4]
+ 8001246:	3b01      	subs	r3, #1
+ 8001248:	6053      	str	r3, [r2, #4]
+
+    /* Clear current value register */
+    SYSTICK->VAL = 0U;
+ 800124a:	4b06      	ldr	r3, [pc, #24]	@ (8001264 <SYSTICK_Init+0x4c>)
+ 800124c:	2200      	movs	r2, #0
+ 800124e:	609a      	str	r2, [r3, #8]
+    /*
+     * CLKSOURCE = 1 -> Processor clock (HCLK)
+     * TICKINT   = 1 -> Enable SysTick interrupt
+     * ENABLE    = 1 -> Start counter
+     */
+    SYSTICK->CTRL =
+ 8001250:	4b04      	ldr	r3, [pc, #16]	@ (8001264 <SYSTICK_Init+0x4c>)
+ 8001252:	2207      	movs	r2, #7
+ 8001254:	601a      	str	r2, [r3, #0]
+ 8001256:	e000      	b.n	800125a <SYSTICK_Init+0x42>
+        return;
+ 8001258:	bf00      	nop
+          SYSTICK_CTRL_CLKSOURCE
+        | SYSTICK_CTRL_TICKINT
+        | SYSTICK_CTRL_ENABLE;
+}
+ 800125a:	3708      	adds	r7, #8
+ 800125c:	46bd      	mov	sp, r7
+ 800125e:	bd80      	pop	{r7, pc}
+ 8001260:	10624dd3 	.word	0x10624dd3
+ 8001264:	e000e010 	.word	0xe000e010
+
+08001268 <SYSTICK_DelayMs>:
+
+void SYSTICK_DelayMs(uint32 DelayMs)
+{
+ 8001268:	b580      	push	{r7, lr}
+ 800126a:	b084      	sub	sp, #16
+ 800126c:	af00      	add	r7, sp, #0
+ 800126e:	6078      	str	r0, [r7, #4]
+    uint32 TickStart = SYSTICK_GetTick();
+ 8001270:	f000 f810 	bl	8001294 <SYSTICK_GetTick>
+ 8001274:	60f8      	str	r0, [r7, #12]
+
+    while ((SYSTICK_GetTick() - TickStart) < DelayMs)
+ 8001276:	bf00      	nop
+ 8001278:	f000 f80c 	bl	8001294 <SYSTICK_GetTick>
+ 800127c:	4602      	mov	r2, r0
+ 800127e:	68fb      	ldr	r3, [r7, #12]
+ 8001280:	1ad3      	subs	r3, r2, r3
+ 8001282:	687a      	ldr	r2, [r7, #4]
+ 8001284:	429a      	cmp	r2, r3
+ 8001286:	d8f7      	bhi.n	8001278 <SYSTICK_DelayMs+0x10>
+    {
+        /* Wait */
+    }
+}
+ 8001288:	bf00      	nop
+ 800128a:	bf00      	nop
+ 800128c:	3710      	adds	r7, #16
+ 800128e:	46bd      	mov	sp, r7
+ 8001290:	bd80      	pop	{r7, pc}
+	...
+
+08001294 <SYSTICK_GetTick>:
+
+uint32 SYSTICK_GetTick(void)
+{
+ 8001294:	b480      	push	{r7}
+ 8001296:	af00      	add	r7, sp, #0
+    return Systick_GlobalTick;
+ 8001298:	4b03      	ldr	r3, [pc, #12]	@ (80012a8 <SYSTICK_GetTick+0x14>)
+ 800129a:	681b      	ldr	r3, [r3, #0]
+}
+ 800129c:	4618      	mov	r0, r3
+ 800129e:	46bd      	mov	sp, r7
+ 80012a0:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80012a4:	4770      	bx	lr
+ 80012a6:	bf00      	nop
+ 80012a8:	20000060 	.word	0x20000060
+
+080012ac <SysTick_Handler>:
+/*================================================================================================*/
+/* SysTick Interrupt Handler                                                                      */
+/*================================================================================================*/
+
+void SysTick_Handler(void)
+{
+ 80012ac:	b580      	push	{r7, lr}
+ 80012ae:	af00      	add	r7, sp, #0
+    SYSTICK_IncTick();
+ 80012b0:	f000 f802 	bl	80012b8 <SYSTICK_IncTick>
+}
+ 80012b4:	bf00      	nop
+ 80012b6:	bd80      	pop	{r7, pc}
+
+080012b8 <SYSTICK_IncTick>:
+/*================================================================================================*/
+/* Local Functions                                                                                */
+/*================================================================================================*/
+
+static inline void SYSTICK_IncTick(void)
+{
+ 80012b8:	b480      	push	{r7}
+ 80012ba:	af00      	add	r7, sp, #0
+    Systick_GlobalTick++;
+ 80012bc:	4b04      	ldr	r3, [pc, #16]	@ (80012d0 <SYSTICK_IncTick+0x18>)
+ 80012be:	681b      	ldr	r3, [r3, #0]
+ 80012c0:	3301      	adds	r3, #1
+ 80012c2:	4a03      	ldr	r2, [pc, #12]	@ (80012d0 <SYSTICK_IncTick+0x18>)
+ 80012c4:	6013      	str	r3, [r2, #0]
+ 80012c6:	bf00      	nop
+ 80012c8:	46bd      	mov	sp, r7
+ 80012ca:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80012ce:	4770      	bx	lr
+ 80012d0:	20000060 	.word	0x20000060
+
+080012d4 <__libc_init_array>:
+ 80012d4:	b570      	push	{r4, r5, r6, lr}
+ 80012d6:	4d0d      	ldr	r5, [pc, #52]	@ (800130c <__libc_init_array+0x38>)
+ 80012d8:	4c0d      	ldr	r4, [pc, #52]	@ (8001310 <__libc_init_array+0x3c>)
+ 80012da:	1b64      	subs	r4, r4, r5
+ 80012dc:	10a4      	asrs	r4, r4, #2
+ 80012de:	2600      	movs	r6, #0
+ 80012e0:	42a6      	cmp	r6, r4
+ 80012e2:	d109      	bne.n	80012f8 <__libc_init_array+0x24>
+ 80012e4:	4d0b      	ldr	r5, [pc, #44]	@ (8001314 <__libc_init_array+0x40>)
+ 80012e6:	4c0c      	ldr	r4, [pc, #48]	@ (8001318 <__libc_init_array+0x44>)
+ 80012e8:	f000 f818 	bl	800131c <_init>
+ 80012ec:	1b64      	subs	r4, r4, r5
+ 80012ee:	10a4      	asrs	r4, r4, #2
+ 80012f0:	2600      	movs	r6, #0
+ 80012f2:	42a6      	cmp	r6, r4
+ 80012f4:	d105      	bne.n	8001302 <__libc_init_array+0x2e>
+ 80012f6:	bd70      	pop	{r4, r5, r6, pc}
+ 80012f8:	f855 3b04 	ldr.w	r3, [r5], #4
+ 80012fc:	4798      	blx	r3
+ 80012fe:	3601      	adds	r6, #1
+ 8001300:	e7ee      	b.n	80012e0 <__libc_init_array+0xc>
+ 8001302:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8001306:	4798      	blx	r3
+ 8001308:	3601      	adds	r6, #1
+ 800130a:	e7f2      	b.n	80012f2 <__libc_init_array+0x1e>
+ 800130c:	08001464 	.word	0x08001464
+ 8001310:	08001464 	.word	0x08001464
+ 8001314:	08001464 	.word	0x08001464
+ 8001318:	08001468 	.word	0x08001468
+
+0800131c <_init>:
+ 800131c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800131e:	bf00      	nop
+ 8001320:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8001322:	bc08      	pop	{r3}
+ 8001324:	469e      	mov	lr, r3
+ 8001326:	4770      	bx	lr
+
+08001328 <_fini>:
+ 8001328:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 800132a:	bf00      	nop
+ 800132c:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 800132e:	bc08      	pop	{r3}
+ 8001330:	469e      	mov	lr, r3
+ 8001332:	4770      	bx	lr
